@@ -20,61 +20,82 @@ ActiveRecord::Schema.define(version: 2019_12_24_175310) do
     t.string "description"
     t.datetime "start"
     t.datetime "end"
+    t.datetime "created"
+    t.datetime "last_updated"
   end
 
   create_table "images", force: :cascade do |t|
-    t.string "hash"
+    t.string "checksum"
     t.string "uri"
     t.string "title"
-    t.index ["hash"], name: "index_images_on_hash", unique: true
+    t.datetime "created"
+    t.datetime "last_updated"
+    t.index ["checksum"], name: "index_images_on_checksum", unique: true
   end
 
   create_table "page_images", force: :cascade do |t|
     t.string "element_id"
     t.integer "page_id"
     t.integer "image_id"
+    t.datetime "created"
+    t.datetime "last_updated"
   end
 
   create_table "page_texts", force: :cascade do |t|
     t.string "element_id"
     t.integer "page_id"
     t.integer "text_id"
+    t.datetime "created"
+    t.datetime "last_updated"
   end
 
   create_table "pages", force: :cascade do |t|
     t.string "name"
+    t.datetime "created"
+    t.datetime "last_updated"
   end
 
   create_table "privileges", force: :cascade do |t|
     t.string "name"
+    t.datetime "created"
+    t.datetime "last_updated"
   end
 
   create_table "roles", force: :cascade do |t|
     t.string "name"
+    t.datetime "created"
+    t.datetime "last_updated"
   end
 
   create_table "staffs", force: :cascade do |t|
     t.string "title"
     t.integer "user_id"
+    t.datetime "created"
+    t.datetime "last_updated"
   end
 
   create_table "texts", force: :cascade do |t|
     t.string "content"
+    t.datetime "created"
+    t.datetime "last_updated"
   end
 
   create_table "user_privileges", force: :cascade do |t|
     t.string "name"
     t.integer "user_id"
     t.integer "privilege_id"
+    t.datetime "created"
+    t.datetime "last_updated"
   end
 
   create_table "users", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
     t.string "email"
-    t.datetime "created"
     t.string "password"
     t.integer "role_id"
+    t.datetime "created"
+    t.datetime "last_updated"
   end
 
   add_foreign_key "page_images", "images"

@@ -5,6 +5,8 @@ class CreateEvents < ActiveRecord::Migration[6.0]
             t.string :description
             t.datetime :start
             t.datetime :end
+            t.datetime :created
+            t.datetime :last_updated
         end
     end
 end

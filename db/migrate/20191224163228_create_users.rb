@@ -4,9 +4,10 @@ class CreateUsers < ActiveRecord::Migration[6.0]
             t.string :first_name
             t.string :last_name
             t.string :email
-            t.datetime :created
             t.string :password
             t.integer :role_id
+            t.datetime :created
+            t.datetime :last_updated
         end
     end
 end

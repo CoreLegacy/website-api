@@ -4,6 +4,8 @@ class CreatePageImages < ActiveRecord::Migration[6.0]
             t.string :element_id
             t.integer :page_id
             t.integer :image_id
+            t.datetime :created
+            t.datetime :last_updated
         end
     end
 end

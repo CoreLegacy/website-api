@@ -1,11 +1,13 @@
 class CreateImages < ActiveRecord::Migration[6.0]
     def change
         create_table :images do |t|
-            t.string :hash
+            t.string :checksum
             t.string :uri
             t.string :title
+            t.datetime :created
+            t.datetime :last_updated
 
-            t.index :hash, unique: true
+            t.index :checksum, unique: true
         end
     end
 end

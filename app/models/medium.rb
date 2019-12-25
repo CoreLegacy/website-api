@@ -1,6 +1,5 @@
 require_relative "./application_record"
 
-class Image < ApplicationRecord
-    validates_uniqueness_of :checksum
+class Medium < ApplicationRecord
     validates_presence_of :checksum, :uri
 end

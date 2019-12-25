@@ -1,6 +1,6 @@
-class CreatePages < ActiveRecord::Migration[6.0]
+class CreateViews < ActiveRecord::Migration[6.0]
     def change
-        create_table :pages do |t|
+        create_table :views do |t|
             t.string :name
             t.datetime :created
             t.datetime :last_updated

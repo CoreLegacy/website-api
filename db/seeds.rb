@@ -1,30 +1,40 @@
-Role.create :name => "superadmin"
-Role.create :name => "staff"
-Role.create :name => "member"
-Role.create :name => "visitor"
+require_relative './db_utility'
+include DbUtility
 
-Privilege.create :name => "images"
-Privilege.create :name => "text"
-Privilege.create :name => "events"
-Privilege.create :name => "blogs"
+DbUtility.upsert(Role.new(:name => "superadmin"))
+DbUtility.upsert(Role.new(:name => "staff"))
+DbUtility.upsert(Role.new(:name => "member"))
+DbUtility.upsert(Role.new(:name => "visitor"))
 
-airielle = User.create :first_name => "Airielle", :last_name => "Dotson", :email => "airielle.dotson@gmail.com", :password => "password", :role_id => Role.find_by(:name => "superadmin").id
-Staff.create :title => "Director", :user_id => airielle.id
+DbUtility.upsert(Privilege.new(:name => "images"))
+DbUtility.upsert(Privilege.new(:name => "text"))
+DbUtility.upsert(Privilege.new(:name => "events"))
+DbUtility.upsert(Privilege.new(:name => "blogs"))
+
+airielle = DbUtility.upsert(User.new(:first_name => "Airielle", :last_name => "Dotson", :email => "airielle.dotson@gmail.com", :password => "password", :role_id => Role.find_by(:name => "superadmin").id))
+DbUtility.upsert(Staff.new(:title => "Director", :user_id => airielle.id))
 Privilege.all.each do |privilege|
-    UserPrivilege.create :user_id => airielle.id, :privilege_id => privilege.id
+    DbUtility.upsert(UserPrivilege.new(:user_id => airielle.id, :privilege_id => privilege.id))
 end
 
-Page.create :name => "home"
-Page.create :name => "login"
-Page.create :name => "register"
-Page.create :name => "donate"
-Page.create :name => "about-contact"
-Page.create :name => "about-partners"
-Page.create :name => "about-story"
-Page.create :name => "about-team"
-Page.create :name => "contribute-financial"
-Page.create :name => "contribute-mentor"
-Page.create :name => "contribute-sponsor"
-Page.create :name => "contribute-volunteer"
+home_view = DbUtility.upsert(View.new(:name => "home"))
+puts home_view.inspect
+DbUtility.upsert(View.new(:name => "login"))
+DbUtility.upsert(View.new(:name => "register"))
+DbUtility.upsert(View.new(:name => "donate"))
+DbUtility.upsert(View.new(:name => "about-contact"))
+DbUtility.upsert(View.new(:name => "about-partners"))
+DbUtility.upsert(View.new(:name => "about-story"))
+DbUtility.upsert(View.new(:name => "about-team"))
+DbUtility.upsert(View.new(:name => "contribute-financial"))
+DbUtility.upsert(View.new(:name => "contribute-mentor"))
+DbUtility.upsert(View.new(:name => "contribute-sponsor"))
+DbUtility.upsert(View.new(:name => "contribute-volunteer"))
 
-Image.create :uri => "banner_1200x650.jpg", :checksum => 1, :title => "home-banner"
+image_type = DbUtility.upsert(MediaType.new(:description => MediaType::IMAGE_DESC))
+video_type = DbUtility.upsert(MediaType.new(:description => MediaType::VIDEO_DESC))
+audio_type = DbUtility.upsert(MediaType.new(:description => MediaType::AUDIO_DESC))
+
+home_banner = DbUtility.upsert(Medium.new(:uri => "banner_1200x650.jpg", :checksum => 1, :title => "home-banner", :media_type_id => image_type.id))
+
+puts((DbUtility.upsert(ViewMedium.new(:view_id => home_view.id, :medium_id => home_banner.id, :identifier => "home-banner"))).inspect)

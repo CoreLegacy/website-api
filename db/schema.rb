@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_24_175310) do
+ActiveRecord::Schema.define(version: 2019_12_25_154920) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,33 +24,17 @@ ActiveRecord::Schema.define(version: 2019_12_24_175310) do
     t.datetime "last_updated"
   end
 
-  create_table "images", force: :cascade do |t|
+  create_table "media", force: :cascade do |t|
+    t.integer "media_type_id"
     t.string "checksum"
     t.string "uri"
     t.string "title"
     t.datetime "created"
     t.datetime "last_updated"
-    t.index ["checksum"], name: "index_images_on_checksum", unique: true
   end
 
-  create_table "page_images", force: :cascade do |t|
-    t.string "element_id"
-    t.integer "page_id"
-    t.integer "image_id"
-    t.datetime "created"
-    t.datetime "last_updated"
-  end
-
-  create_table "page_texts", force: :cascade do |t|
-    t.string "element_id"
-    t.integer "page_id"
-    t.integer "text_id"
-    t.datetime "created"
-    t.datetime "last_updated"
-  end
-
-  create_table "pages", force: :cascade do |t|
-    t.string "name"
+  create_table "media_types", force: :cascade do |t|
+    t.string "description"
     t.datetime "created"
     t.datetime "last_updated"
   end
@@ -81,7 +65,6 @@ ActiveRecord::Schema.define(version: 2019_12_24_175310) do
   end
 
   create_table "user_privileges", force: :cascade do |t|
-    t.string "name"
     t.integer "user_id"
     t.integer "privilege_id"
     t.datetime "created"
@@ -98,12 +81,34 @@ ActiveRecord::Schema.define(version: 2019_12_24_175310) do
     t.datetime "last_updated"
   end
 
-  add_foreign_key "page_images", "images"
-  add_foreign_key "page_images", "pages"
-  add_foreign_key "page_texts", "pages"
-  add_foreign_key "page_texts", "texts"
+  create_table "view_media", force: :cascade do |t|
+    t.string "identifier"
+    t.integer "view_id"
+    t.integer "medium_id"
+    t.datetime "created"
+    t.datetime "last_updated"
+  end
+
+  create_table "view_texts", force: :cascade do |t|
+    t.string "identifier"
+    t.integer "view_id"
+    t.integer "text_id"
+    t.datetime "created"
+    t.datetime "last_updated"
+  end
+
+  create_table "views", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created"
+    t.datetime "last_updated"
+  end
+
   add_foreign_key "staffs", "users"
   add_foreign_key "user_privileges", "privileges"
   add_foreign_key "user_privileges", "users"
   add_foreign_key "users", "roles"
+  add_foreign_key "view_media", "media"
+  add_foreign_key "view_media", "views"
+  add_foreign_key "view_texts", "texts"
+  add_foreign_key "view_texts", "views"
 end

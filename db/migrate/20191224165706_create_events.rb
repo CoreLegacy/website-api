@@ -7,6 +7,7 @@ class CreateEvents < ActiveRecord::Migration[6.0]
             t.datetime :end
             t.datetime :created
             t.datetime :last_updated
+            t.integer :last_updated_by
         end
     end
 end

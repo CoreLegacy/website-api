@@ -1,15 +1,26 @@
+require_relative "../services/user_service"
+
 class ApplicationRecord < ActiveRecord::Base
+    include UserService
     self.abstract_class = true
 
     before_create :set_created_timestamp
-    before_save :set_last_updated_timestamp
+    before_save :set_last_updated
 
     def set_created_timestamp
         self.created = DateTime.now
     end
 
-    def set_last_updated_timestamp
+    def set_last_updated
+        puts "setting last updated fields"
+        puts UserService.inspect
         self.last_updated = DateTime.now
+        user              = UserService.current_user
+        if user
+            self.last_updated_by = user.id
+        else
+            self.last_updated_by = nil
+        end
     end
 
     def to_hash

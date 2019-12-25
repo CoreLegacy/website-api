@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 2019_12_25_154920) do
     t.datetime "end"
     t.datetime "created"
     t.datetime "last_updated"
+    t.integer "last_updated_by"
   end
 
   create_table "media", force: :cascade do |t|
@@ -31,24 +32,28 @@ ActiveRecord::Schema.define(version: 2019_12_25_154920) do
     t.string "title"
     t.datetime "created"
     t.datetime "last_updated"
+    t.integer "last_updated_by"
   end
 
   create_table "media_types", force: :cascade do |t|
     t.string "description"
     t.datetime "created"
     t.datetime "last_updated"
+    t.integer "last_updated_by"
   end
 
   create_table "privileges", force: :cascade do |t|
     t.string "name"
     t.datetime "created"
     t.datetime "last_updated"
+    t.integer "last_updated_by"
   end
 
   create_table "roles", force: :cascade do |t|
     t.string "name"
     t.datetime "created"
     t.datetime "last_updated"
+    t.integer "last_updated_by"
   end
 
   create_table "staffs", force: :cascade do |t|
@@ -56,12 +61,14 @@ ActiveRecord::Schema.define(version: 2019_12_25_154920) do
     t.integer "user_id"
     t.datetime "created"
     t.datetime "last_updated"
+    t.integer "last_updated_by"
   end
 
   create_table "texts", force: :cascade do |t|
     t.string "content"
     t.datetime "created"
     t.datetime "last_updated"
+    t.integer "last_updated_by"
   end
 
   create_table "user_privileges", force: :cascade do |t|
@@ -69,6 +76,7 @@ ActiveRecord::Schema.define(version: 2019_12_25_154920) do
     t.integer "privilege_id"
     t.datetime "created"
     t.datetime "last_updated"
+    t.integer "last_updated_by"
   end
 
   create_table "users", force: :cascade do |t|
@@ -79,6 +87,7 @@ ActiveRecord::Schema.define(version: 2019_12_25_154920) do
     t.integer "role_id"
     t.datetime "created"
     t.datetime "last_updated"
+    t.integer "last_updated_by"
   end
 
   create_table "view_media", force: :cascade do |t|
@@ -87,6 +96,7 @@ ActiveRecord::Schema.define(version: 2019_12_25_154920) do
     t.integer "medium_id"
     t.datetime "created"
     t.datetime "last_updated"
+    t.integer "last_updated_by"
   end
 
   create_table "view_texts", force: :cascade do |t|
@@ -95,20 +105,34 @@ ActiveRecord::Schema.define(version: 2019_12_25_154920) do
     t.integer "text_id"
     t.datetime "created"
     t.datetime "last_updated"
+    t.integer "last_updated_by"
   end
 
   create_table "views", force: :cascade do |t|
     t.string "name"
     t.datetime "created"
     t.datetime "last_updated"
+    t.integer "last_updated_by"
   end
 
+  add_foreign_key "events", "users", column: "last_updated_by"
+  add_foreign_key "media", "users", column: "last_updated_by"
+  add_foreign_key "media_types", "users", column: "last_updated_by"
+  add_foreign_key "privileges", "users", column: "last_updated_by"
+  add_foreign_key "roles", "users", column: "last_updated_by"
   add_foreign_key "staffs", "users"
+  add_foreign_key "staffs", "users", column: "last_updated_by"
+  add_foreign_key "texts", "users", column: "last_updated_by"
   add_foreign_key "user_privileges", "privileges"
   add_foreign_key "user_privileges", "users"
+  add_foreign_key "user_privileges", "users", column: "last_updated_by"
   add_foreign_key "users", "roles"
+  add_foreign_key "users", "users", column: "last_updated_by"
   add_foreign_key "view_media", "media"
+  add_foreign_key "view_media", "users", column: "last_updated_by"
   add_foreign_key "view_media", "views"
   add_foreign_key "view_texts", "texts"
+  add_foreign_key "view_texts", "users", column: "last_updated_by"
   add_foreign_key "view_texts", "views"
+  add_foreign_key "views", "users", column: "last_updated_by"
 end

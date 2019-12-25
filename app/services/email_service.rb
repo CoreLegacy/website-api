@@ -1,2 +1,3 @@
-class EmailService
+module EmailService
+
 end

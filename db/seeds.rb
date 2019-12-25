@@ -1,5 +1,7 @@
 require_relative './db_utility'
+require_relative "../app/services/user_service"
 include DbUtility
+include UserService
 
 DbUtility.upsert(Role.new(:name => "superadmin"))
 DbUtility.upsert(Role.new(:name => "staff"))
@@ -10,6 +12,12 @@ DbUtility.upsert(Privilege.new(:name => "images"))
 DbUtility.upsert(Privilege.new(:name => "text"))
 DbUtility.upsert(Privilege.new(:name => "events"))
 DbUtility.upsert(Privilege.new(:name => "blogs"))
+
+seed_user = User.new :first_name => "Database", :last_name => "Seeder", :email => "x@y.com", :password => "123", :role_id => 1
+puts seed_user.inspect
+seed_user = DbUtility.upsert seed_user
+puts seed_user.inspect
+UserService.current_user = seed_user
 
 airielle = DbUtility.upsert(User.new(:first_name => "Airielle", :last_name => "Dotson", :email => "airielle.dotson@gmail.com", :password => "password", :role_id => Role.find_by(:name => "superadmin").id))
 DbUtility.upsert(Staff.new(:title => "Director", :user_id => airielle.id))

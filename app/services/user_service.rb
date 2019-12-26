@@ -11,4 +11,45 @@ module UserService
             Thread.current[:user] = nil
         end
     end
+
+    def self.get(user_id)
+        user = User.find user_id
+        if user
+            user = UserData.new user
+        else
+            nil
+        end
+    end
+
+    def self.create(params)
+        user = User.new
+        user.email = params[:email]
+        user.password = params[:password]
+        user.first_name = params[:first_name]
+        user.last_name = params[:last_name]
+        if params[:role]
+            user.role_id = Role.find_by(params[:role]).id
+        else
+            user.role_id = Role.find_by(:name => Role::MEMBER)
+        end
+
+        user.save
+    end
+
+    def self.authenticate(email, password)
+        user = User.find_by :email => email
+        LogService.log user
+        if user
+            user = user.authenticate(password)
+            user = UserData.new user
+        else
+            user = nil
+        end
+
+        user
+    end
+
+    def self.get_privileges(user)
+        Privilege.joins(:user_privileges).where(user_privileges: { user_id: user.id }).to_a
+    end
 end

@@ -56,6 +56,7 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
       zeitwerk (~> 2.2)
+    bcrypt (3.1.13)
     bootsnap (1.4.5)
       msgpack (~> 1.0)
     builder (3.2.4)
@@ -91,6 +92,8 @@ GEM
     puma (4.3.1)
       nio4r (~> 2.0)
     rack (2.0.8)
+    rack-cors (1.1.0)
+      rack (>= 2.0.0)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (6.0.2)
@@ -143,10 +146,12 @@ PLATFORMS
   x64-mingw32
 
 DEPENDENCIES
+  bcrypt
   bootsnap (>= 1.4.2)
   byebug
   pg (>= 0.18, < 2.0)
   puma (~> 4.1)
+  rack-cors
   rails (~> 6.0.2)
   tzinfo-data
 

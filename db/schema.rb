@@ -83,7 +83,7 @@ ActiveRecord::Schema.define(version: 2019_12_25_154920) do
     t.string "first_name"
     t.string "last_name"
     t.string "email"
-    t.string "password"
+    t.string "password_digest"
     t.integer "role_id"
     t.datetime "created"
     t.datetime "last_updated"

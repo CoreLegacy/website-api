@@ -27,21 +27,21 @@ module DbUtility
             data.each do |key, value|
                 record.send("#{key}=", value)
             end
-            record.save
             # If the record was NOT found, just create a new record
         else
             puts "Inserting #{type}: #{data}"
             record = type.create data
-            record.save
         end
+
+        puts record.save.errors
 
         record
     end
 
     def upsert(model)
         record = model
-        type   = model.class
-        data   = model.to_hash
+        type = model.class
+        data = model.to_hash
         begin
             # Attempt to retrieve the record using the keys provided
             record = type.find_by data
@@ -52,12 +52,18 @@ module DbUtility
                 data.each do |key, value|
                     record.send("#{key}=", value)
                 end
-                record.save
                 # If the record was NOT found, just create a new record
             else
                 puts "Inserting #{type}: #{data}"
                 record = type.create data
-                record.save
+            end
+
+            record.save
+
+            if record.errors
+                record.errors.each do |error|
+                    puts error
+                end
             end
         rescue => exception
             puts "#{type}: unable to update model #{record.inspect}"

@@ -3,23 +3,22 @@ require_relative "../app/services/user_service"
 include DbUtility
 include UserService
 
-DbUtility.upsert(Role.new(:name => "superadmin"))
-DbUtility.upsert(Role.new(:name => "staff"))
-DbUtility.upsert(Role.new(:name => "member"))
-DbUtility.upsert(Role.new(:name => "visitor"))
+DbUtility.upsert(Role.new(:name => Role::ADMIN))
+DbUtility.upsert(Role.new(:name => Role::STAFF))
+DbUtility.upsert(Role.new(:name => Role::MEMBER))
 
-DbUtility.upsert(Privilege.new(:name => "images"))
-DbUtility.upsert(Privilege.new(:name => "text"))
-DbUtility.upsert(Privilege.new(:name => "events"))
-DbUtility.upsert(Privilege.new(:name => "blogs"))
+DbUtility.upsert(Privilege.new(:name => Privilege::MEDIA))
+DbUtility.upsert(Privilege.new(:name => Privilege::TEXT))
+DbUtility.upsert(Privilege.new(:name => Privilege::EVENTS))
+DbUtility.upsert(Privilege.new(:name => Privilege::BLOG))
 
-seed_user = User.new :first_name => "Database", :last_name => "Seeder", :email => "x@y.com", :password => "123", :role_id => 1
+seed_user = User.new :first_name => "Database", :last_name => "Seeder", :email => "x@y.com", :password => "abc123", :role_id => Role.find_by(name: Role::ADMIN).id
 puts seed_user.inspect
 seed_user = DbUtility.upsert seed_user
 puts seed_user.inspect
 UserService.current_user = seed_user
 
-airielle = DbUtility.upsert(User.new(:first_name => "Airielle", :last_name => "Dotson", :email => "airielle.dotson@gmail.com", :password => "password", :role_id => Role.find_by(:name => "superadmin").id))
+airielle = DbUtility.upsert(User.new(:first_name => "Airielle", :last_name => "Dotson", :email => "airielle.dotson@gmail.com", :password => "password", :role_id => Role.find_by(:name => Role::ADMIN).id))
 DbUtility.upsert(Staff.new(:title => "Director", :user_id => airielle.id))
 Privilege.all.each do |privilege|
     DbUtility.upsert(UserPrivilege.new(:user_id => airielle.id, :privilege_id => privilege.id))

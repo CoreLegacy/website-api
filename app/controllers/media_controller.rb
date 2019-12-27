@@ -5,14 +5,27 @@ include MediaService
 
 class MediaController < ApplicationController
 
+    def index
+        params = media_params
+        if params[:id]
+            response = Medium.find params[:id]
+        else
+            response = Medium.all
+        end
+
+        render json: response
+    end
+
     def create
         params = media_params
-        puts params
 
         media_file = params[:media_data]
         content_type = media_file.content_type
         if content_type
             content_type = content_type.split "/"
+            # Remove optional parameters from subtype (starts with semicolon)
+            content_type[1] = content_type[1][/^[^;]*/]
+            puts "Content SubType after sub: #{content_type[1]}"
         else
             content_type = %w{image jpg}
         end
@@ -35,7 +48,7 @@ class MediaController < ApplicationController
     private
 
     def media_params
-        params.permit :user, :media_data, :title, :type, :sub_type
+        params.permit :user, :media_data, :title, :type, :sub_type, :id
     end
 
 end

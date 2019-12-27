@@ -8,7 +8,7 @@ class LoginController < ApplicationController
         email = params[:email]
         password = params[:password]
 
-        response.user = UserService.authenticate email, password
+        response.user = UserService::authenticate email, password
 
         render json: response
     end

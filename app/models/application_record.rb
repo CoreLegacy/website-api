@@ -12,10 +12,8 @@ class ApplicationRecord < ActiveRecord::Base
     end
 
     def set_last_updated
-        puts "setting last updated fields"
-        puts UserService.inspect
         self.last_updated = DateTime.now
-        user              = UserService.current_user
+        user = UserService.current_user
         if user
             self.last_updated_by = user.id
         else

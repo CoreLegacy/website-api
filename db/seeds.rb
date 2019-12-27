@@ -16,7 +16,7 @@ seed_user = User.new :first_name => "Database", :last_name => "Seeder", :email =
 puts seed_user.inspect
 seed_user = DbUtility::upsert seed_user
 puts seed_user.inspect
-UserService.current_user = seed_user
+UserService::current_user = seed_user
 
 airielle = DbUtility::upsert(User.new(:first_name => "Airielle", :last_name => "Dotson", :email => "airielle.dotson@gmail.com", :password => "password", :role_id => Role.find_by(:name => Role::ADMIN).id))
 DbUtility::upsert(Staff.new(:title => "Director", :user_id => airielle.id))
@@ -38,9 +38,9 @@ DbUtility::upsert(View.new(:name => "contribute-mentor"))
 DbUtility::upsert(View.new(:name => "contribute-sponsor"))
 DbUtility::upsert(View.new(:name => "contribute-volunteer"))
 
-image_type = DbUtility::upsert(MediaType.new(:description => MediaType::IMAGE_DESC))
-video_type = DbUtility::upsert(MediaType.new(:description => MediaType::VIDEO_DESC))
-audio_type = DbUtility::upsert(MediaType.new(:description => MediaType::AUDIO_DESC))
+image_type = DbUtility::upsert(MediaType.new(mime_primary_type: "image", mime_sub_type: "jpg"))
+video_type = DbUtility::upsert(MediaType.new(mime_primary_type: "video", mime_sub_type: "mp4"))
+audio_type = DbUtility::upsert(MediaType.new(mime_primary_type: "audio", mime_sub_type: "mp3"))
 
 home_banner = DbUtility::upsert(Medium.new(:uri => "banner_1200x650.jpg", :checksum => 1, :title => "home-banner", :media_type_id => image_type.id))
 

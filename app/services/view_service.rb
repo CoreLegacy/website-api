@@ -1,12 +1,12 @@
 module ViewService
 
-    def self.get_view_data(name)
+    def get_view_data(name)
         view = View.find_by name: name
 
         ViewData.new view
     end
 
-    def self.get_media_data(view)
+    def get_media_data(view)
         view_media = ViewMedium.where view_id: view.id
 
         media_data = []
@@ -22,7 +22,7 @@ module ViewService
         media_data
     end
 
-    def self.get_texts_data(view)
+    def get_texts_data(view)
         view_texts = ViewText.where view_id: view.id
 
         view_data = []

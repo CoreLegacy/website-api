@@ -12,7 +12,7 @@ module UserService
         end
     end
 
-    def self.get(user_id)
+    def get(user_id)
         user = User.find user_id
         if user
             user = UserData.new user
@@ -21,7 +21,7 @@ module UserService
         end
     end
 
-    def self.create(params)
+    def create(params)
         user = User.new
         user.email = params[:email]
         user.password = params[:password]
@@ -36,9 +36,9 @@ module UserService
         user.save
     end
 
-    def self.authenticate(email, password)
+    def authenticate(email, password)
         user = User.find_by :email => email
-        LogService.log user
+        LogService::log user
         if user
             user = user.authenticate(password)
             user = UserData.new user
@@ -49,7 +49,7 @@ module UserService
         user
     end
 
-    def self.get_privileges(user)
+    def get_privileges(user)
         Privilege.joins(:user_privileges).where(user_privileges: { user_id: user.id }).to_a
     end
 end

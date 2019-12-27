@@ -1,9 +1,10 @@
 require_relative "../services/user_service"
 require_relative "../services/log_service"
 
+include UserService
+include LogService
+
 class ApplicationController < ActionController::API
-    include UserService
-    include LogService
 
     before_action :set_user
     before_action :log_request
@@ -18,16 +19,16 @@ class ApplicationController < ActionController::API
         else
             @current_user = nil
         end
-        UserService.current_user = @current_user
+        UserService::current_user = @current_user
     end
 
     def log_request
-        LogService.log "Request to '#{request.fullpath}':#{$/}\t#{params}"
+        LogService::log "Request to '#{request.fullpath}':#{$/}\t#{params}"
 
     end
 
     def log_response
-        LogService.log "Response from '#{request.fullpath}':#{$/}\t#{response.body}"
+        LogService::log "Response from '#{request.fullpath}':#{$/}\t#{response.body}"
     end
 
     def error_handler(exception)
@@ -35,7 +36,7 @@ class ApplicationController < ActionController::API
         response.add_message exception.message
         stacktrace = exception.backtrace.join($/)
         response.add_message stacktrace
-        LogService.log "#{exception.message}#{$/}#{stacktrace}"
+        LogService::log "#{exception.message}#{$/}#{stacktrace}"
 
         render json: response, status: :internal_server_error
     end

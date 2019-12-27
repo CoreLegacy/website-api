@@ -9,7 +9,8 @@ module MediaService
 
     def upsert_media(upload_data)
         media_type = MediaType.new
-        media_type.description = upload_data.mime_primary_type
+        media_type.mime_primary_type = upload_data.mime_primary_type
+        media_type.mime_sub_type = upload_data.mime_sub_type
         media_type = DbUtility::upsert media_type
 
         raw_data = upload_data.media_data.read
@@ -24,7 +25,7 @@ module MediaService
 
         medium.checksum = MediaService::calculate_checksum raw_data
         medium.file_extension = upload_data.mime_sub_type
-        medium.uri = "#{medium.checksum}.#{medium.file_extension}"
+        medium.uri = "#{medium.checksum}"
         medium.media_type_id = media_type.id
         medium.title = upload_data.title
         medium.save

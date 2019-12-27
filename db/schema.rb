@@ -44,7 +44,8 @@ ActiveRecord::Schema.define(version: 2019_12_27_155510) do
   end
 
   create_table "media_types", force: :cascade do |t|
-    t.string "description"
+    t.string "mime_primary_type"
+    t.string "mime_sub_type"
     t.datetime "created"
     t.datetime "last_updated"
     t.integer "last_updated_by"

@@ -11,7 +11,7 @@ class UsersController < ApplicationController
         user_id = params[:id].to_i
 
         if user_id
-            response.user = UserService.get user_id
+            response.user = UserService::get user_id
         else
             response.add_message "Unable to locate user"
         end
@@ -21,7 +21,7 @@ class UsersController < ApplicationController
 
     def create
         params = user_params
-        user = UserService.create params
+        user = UserService::create params
 
         response = UserResponse.new
         response.user = user

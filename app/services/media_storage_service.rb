@@ -11,7 +11,7 @@ module MediaStorageService
         bucket = s3.bucket bucket_name
 
         # Create the object to upload
-        obj = bucket.object medium.uri
+        obj = bucket.object medium.checksum
 
         # Upload it
         obj.upload_file upload_data.media_data, { acl: 'public-read' }

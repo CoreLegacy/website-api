@@ -15,7 +15,7 @@ Rails.application.configure do
     # Enable/disable caching. By default caching is disabled.
     # Run rails dev:cache to toggle caching.
     if Rails.root.join('tmp', 'caching-dev.txt').exist?
-        config.cache_store                = :memory_store
+        config.cache_store = :memory_store
         config.public_file_server.headers = {
             'Cache-Control' => "public, max-age=#{2.days.to_i}"
         }
@@ -42,7 +42,11 @@ Rails.application.configure do
     # Highlight code that triggered database queries in logs.
     config.active_record.verbose_query_logs = true
 
-    API_DATABASE_PASSWORD = 'password'
+    # The root uri of the storage location for media files
+    config.MEDIA_ROOT_URI = "https://s3.us-east-2.amazonaws.com/corelegacy.org-media/"
+
+    config.require_master_key = true
+    config.active_storage.service = :amazon
 
     # Raises error for missing translations.
     # config.action_view.raise_on_missing_translations = true

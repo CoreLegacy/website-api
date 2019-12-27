@@ -4,5 +4,6 @@ Rails.application.routes.draw do
     resources :emails
     resources :views
     resources :login
+    resources :media
 
 end

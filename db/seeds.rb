@@ -3,45 +3,45 @@ require_relative "../app/services/user_service"
 include DbUtility
 include UserService
 
-DbUtility.upsert(Role.new(:name => Role::ADMIN))
-DbUtility.upsert(Role.new(:name => Role::STAFF))
-DbUtility.upsert(Role.new(:name => Role::MEMBER))
+DbUtility::upsert(Role.new(:name => Role::ADMIN))
+DbUtility::upsert(Role.new(:name => Role::STAFF))
+DbUtility::upsert(Role.new(:name => Role::MEMBER))
 
-DbUtility.upsert(Privilege.new(:name => Privilege::MEDIA))
-DbUtility.upsert(Privilege.new(:name => Privilege::TEXT))
-DbUtility.upsert(Privilege.new(:name => Privilege::EVENTS))
-DbUtility.upsert(Privilege.new(:name => Privilege::BLOG))
+DbUtility::upsert(Privilege.new(:name => Privilege::MEDIA))
+DbUtility::upsert(Privilege.new(:name => Privilege::TEXT))
+DbUtility::upsert(Privilege.new(:name => Privilege::EVENTS))
+DbUtility::upsert(Privilege.new(:name => Privilege::BLOG))
 
 seed_user = User.new :first_name => "Database", :last_name => "Seeder", :email => "x@y.com", :password => "abc123", :role_id => Role.find_by(name: Role::ADMIN).id
 puts seed_user.inspect
-seed_user = DbUtility.upsert seed_user
+seed_user = DbUtility::upsert seed_user
 puts seed_user.inspect
 UserService.current_user = seed_user
 
-airielle = DbUtility.upsert(User.new(:first_name => "Airielle", :last_name => "Dotson", :email => "airielle.dotson@gmail.com", :password => "password", :role_id => Role.find_by(:name => Role::ADMIN).id))
-DbUtility.upsert(Staff.new(:title => "Director", :user_id => airielle.id))
+airielle = DbUtility::upsert(User.new(:first_name => "Airielle", :last_name => "Dotson", :email => "airielle.dotson@gmail.com", :password => "password", :role_id => Role.find_by(:name => Role::ADMIN).id))
+DbUtility::upsert(Staff.new(:title => "Director", :user_id => airielle.id))
 Privilege.all.each do |privilege|
-    DbUtility.upsert(UserPrivilege.new(:user_id => airielle.id, :privilege_id => privilege.id))
+    DbUtility::upsert(UserPrivilege.new(:user_id => airielle.id, :privilege_id => privilege.id))
 end
 
-home_view = DbUtility.upsert(View.new(:name => "home"))
+home_view = DbUtility::upsert(View.new(:name => "home"))
 puts home_view.inspect
-DbUtility.upsert(View.new(:name => "login"))
-DbUtility.upsert(View.new(:name => "register"))
-DbUtility.upsert(View.new(:name => "donate"))
-DbUtility.upsert(View.new(:name => "about-contact"))
-DbUtility.upsert(View.new(:name => "about-partners"))
-DbUtility.upsert(View.new(:name => "about-story"))
-DbUtility.upsert(View.new(:name => "about-team"))
-DbUtility.upsert(View.new(:name => "contribute-financial"))
-DbUtility.upsert(View.new(:name => "contribute-mentor"))
-DbUtility.upsert(View.new(:name => "contribute-sponsor"))
-DbUtility.upsert(View.new(:name => "contribute-volunteer"))
+DbUtility::upsert(View.new(:name => "login"))
+DbUtility::upsert(View.new(:name => "register"))
+DbUtility::upsert(View.new(:name => "donate"))
+DbUtility::upsert(View.new(:name => "about-contact"))
+DbUtility::upsert(View.new(:name => "about-partners"))
+DbUtility::upsert(View.new(:name => "about-story"))
+DbUtility::upsert(View.new(:name => "about-team"))
+DbUtility::upsert(View.new(:name => "contribute-financial"))
+DbUtility::upsert(View.new(:name => "contribute-mentor"))
+DbUtility::upsert(View.new(:name => "contribute-sponsor"))
+DbUtility::upsert(View.new(:name => "contribute-volunteer"))
 
-image_type = DbUtility.upsert(MediaType.new(:description => MediaType::IMAGE_DESC))
-video_type = DbUtility.upsert(MediaType.new(:description => MediaType::VIDEO_DESC))
-audio_type = DbUtility.upsert(MediaType.new(:description => MediaType::AUDIO_DESC))
+image_type = DbUtility::upsert(MediaType.new(:description => MediaType::IMAGE_DESC))
+video_type = DbUtility::upsert(MediaType.new(:description => MediaType::VIDEO_DESC))
+audio_type = DbUtility::upsert(MediaType.new(:description => MediaType::AUDIO_DESC))
 
-home_banner = DbUtility.upsert(Medium.new(:uri => "banner_1200x650.jpg", :checksum => 1, :title => "home-banner", :media_type_id => image_type.id))
+home_banner = DbUtility::upsert(Medium.new(:uri => "banner_1200x650.jpg", :checksum => 1, :title => "home-banner", :media_type_id => image_type.id))
 
-puts((DbUtility.upsert(ViewMedium.new(:view_id => home_view.id, :medium_id => home_banner.id, :identifier => "home-banner"))).inspect)
+puts((DbUtility::upsert(ViewMedium.new(:view_id => home_view.id, :medium_id => home_banner.id, :identifier => "home-banner"))).inspect)

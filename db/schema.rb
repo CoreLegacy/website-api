@@ -10,10 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_25_154920) do
+ActiveRecord::Schema.define(version: 2019_12_27_155510) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "amazon_credentials", force: :cascade do |t|
+    t.string "access_key_id"
+    t.string "secret_access_key"
+    t.string "bucket_name"
+    t.string "user"
+  end
 
   create_table "events", force: :cascade do |t|
     t.string "title"
@@ -28,6 +35,7 @@ ActiveRecord::Schema.define(version: 2019_12_25_154920) do
   create_table "media", force: :cascade do |t|
     t.integer "media_type_id"
     t.string "checksum"
+    t.string "file_extension"
     t.string "uri"
     t.string "title"
     t.datetime "created"

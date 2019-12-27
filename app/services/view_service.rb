@@ -1,5 +1,12 @@
 module ViewService
-    def get_media_data(view)
+
+    def self.get_view_data(name)
+        view = View.find_by name: name
+
+        ViewData.new view
+    end
+
+    def self.get_media_data(view)
         view_media = ViewMedium.where view_id: view.id
 
         media_data = []
@@ -15,12 +22,12 @@ module ViewService
         media_data
     end
 
-    def get_texts_data(view)
+    def self.get_texts_data(view)
         view_texts = ViewText.where view_id: view.id
 
         view_data = []
         view_texts.each do |view_text|
-            data = ViewData.new
+            data = ViewItem.new
             text = Text.find view_text.text_id
             data.content = text.content
             data.identifier = view_text.identifier
@@ -29,4 +36,5 @@ module ViewService
 
         texts
     end
+
 end

@@ -3,6 +3,7 @@ class CreateMedia < ActiveRecord::Migration[6.0]
         create_table :media do |t|
             t.integer :media_type_id
             t.string :checksum
+            t.string :file_extension
             t.string :uri
             t.string :title
             t.datetime :created

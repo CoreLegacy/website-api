@@ -6,11 +6,9 @@ class ViewsController < ApplicationController
 
     def index
         params = view_params
-        view = View.find_by name: params[:name]
+
         response = ViewResponse.new
-        response.view = view
-        response.media = ViewService.get_media_data view
-        response.texts = ViewService.get_texts_data view
+        response.view = ViewService.get_view_data params[:name]
 
         render json: response
     end

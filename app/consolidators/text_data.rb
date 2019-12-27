@@ -1,5 +1,5 @@
-require_relative "./view_data"
+require_relative "./view_item"
 
-class TextData < ViewData
+class TextData < ViewItem
     attr_accessor :content
 end

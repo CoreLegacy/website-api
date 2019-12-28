@@ -86,6 +86,7 @@ Rails.application.configure do
     # Custom Settings #
     ###################
 
+    config.require_master_key = true
     config.ENVIRONMENT = :prod
 
     config.action_mailer.raise_delivery_errors = true
@@ -95,8 +96,8 @@ Rails.application.configure do
         :address => "smtp.gmail.com",
         :port => 587,
         :domain => "gmail.com",
-        :user_name => Rails.application.credentials.prod[:email][:address],
-        :password => Rails.application.credentials.prod[:email][:password],
+        :user_name => Rails.application.credentials[:prod][:email][:address],
+        :password => Rails.application.credentials[:prod][:email][:password],
         :authentication => "plain",
         :enable_starttls_auto => true
     }
@@ -107,7 +108,6 @@ Rails.application.configure do
     # The root uri of the storage location for media files
     config.MEDIA_ROOT_URI = "https://s3.us-east-2.amazonaws.com/#{config.S3_BUCKET_NAME}/"
 
-    config.require_master_key = true
     config.active_storage.service = :amazon
 
     # Inserts middleware to perform automatic connection switching.

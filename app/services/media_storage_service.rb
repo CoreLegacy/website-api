@@ -5,8 +5,8 @@ module MediaStorageService
 
         s3 = Aws::S3::Resource.new(
             region: Rails.application.config.AWS_REGION,
-            access_key_id: Rails.application.credentials.aws[:access_key_id],
-            secret_access_key: Rails.application.credentials.aws[:secret_access_key]
+            access_key_id: Rails.application.credentials[:aws][:access_key_id],
+            secret_access_key: Rails.application.credentials[:aws][:secret_access_key]
         )
         bucket = s3.bucket bucket_name
 

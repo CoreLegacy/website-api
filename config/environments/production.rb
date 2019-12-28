@@ -82,8 +82,30 @@ Rails.application.configure do
     # Do not dump schema after migrations.
     config.active_record.dump_schema_after_migration = false
 
+    ###################
+    # Custom Settings #
+    ###################
 
-    config.MEDIA_ROOT_URI = "https://s3.us-east-2.amazonaws.com/corelegacy.org-media/"
+    config.ENVIRONMENT = :prod
+
+    config.action_mailer.raise_delivery_errors = true
+    config.action_mailer.perform_deliveries = true
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+        :address => "smtp.gmail.com",
+        :port => 587,
+        :domain => "gmail.com",
+        :user_name => Rails.application.credentials.prod[:email][:address],
+        :password => Rails.application.credentials.prod[:email][:password],
+        :authentication => "plain",
+        :enable_starttls_auto => true
+    }
+
+    config.S3_BUCKET_NAME = "corelegacy.org.media"
+    config.AWS_REGION = "us-east-2"
+
+    # The root uri of the storage location for media files
+    config.MEDIA_ROOT_URI = "https://s3.us-east-2.amazonaws.com/#{config.S3_BUCKET_NAME}/"
 
     config.require_master_key = true
     config.active_storage.service = :amazon

@@ -1,5 +1,6 @@
 require_relative './application_controller'
 require_relative '../services/user_service'
+require_relative '../../app/mailers/default_mailer'
 
 class UsersController < ApplicationController
     include UserService
@@ -22,6 +23,8 @@ class UsersController < ApplicationController
     def create
         params = user_params
         user = UserService::create params
+
+        DefaultMailer.with(user_id: user.id).welcome_email.deliver
 
         response = UserResponse.new
         response.user = user

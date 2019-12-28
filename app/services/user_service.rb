@@ -27,13 +27,17 @@ module UserService
         user.password = params[:password]
         user.first_name = params[:first_name]
         user.last_name = params[:last_name]
+
+        puts params.inspect
+
         if params[:role]
-            user.role_id = Role.find_by(params[:role]).id
+            user.role_id = Role.find_by(name: params[:role]).id
         else
-            user.role_id = Role.find_by(:name => Role::MEMBER)
+            user.role_id = Role.find_by(name: Role::MEMBER).id
         end
 
-        user.save
+        puts user.save.inspect
+        user
     end
 
     def authenticate(email, password)

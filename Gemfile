@@ -41,3 +41,4 @@ gem 'rack-cors'
 gem 'bcrypt'
 gem "aws-sdk"
 gem 'rails_12factor'
+gem 'bundler'

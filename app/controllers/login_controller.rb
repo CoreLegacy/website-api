@@ -10,6 +10,7 @@ class LoginController < ApplicationController
 
         response.user = UserService::authenticate email, password
 
+        
         render json: response
     end
 

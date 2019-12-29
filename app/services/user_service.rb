@@ -69,6 +69,7 @@ module UserService
 
     def authenticate(email, password)
         user = User.find_by :email => email
+        log "Authenticating email '#{email}' and password '#{password}'#{$/}\t#{user.inspect}"
         if user
             user = user.authenticate(password)
             if user

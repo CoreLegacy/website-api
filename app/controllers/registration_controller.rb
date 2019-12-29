@@ -31,6 +31,12 @@ class RegistrationController < ApplicationController
             user_id = current_user.id
         end
 
+        # Avoid having multiple open reset keys for this user
+        PasswordResetKey.where(user_id: user_id, active: true).each do |reset_key|
+            reset_key.active = false
+            reset_key.save
+        end
+
         reset_key = PasswordResetKey.create reset_key: SecureRandom.uuid, user_id: user_id, active: true
         log "Created Password Reset Key: #{$/}\t#{reset_key.inspect}"
         reset_key.save
@@ -49,9 +55,19 @@ class RegistrationController < ApplicationController
 
         user = User.find_by_id password_reset_key.user_id
         user.password = params[:password]
-
-        password_reset_key.save
         user.save
+
+        # Avoid having multiple open reset keys for this user
+        PasswordResetKey.where(user_id: user.id, active: true).each do |reset_key|
+            reset_key.active = false
+            reset_key.save
+        end
+
+        log "New Password: #{params[:password]}"
+        log "New Password Digest: #{user.password_digest}"
+        log "User: #{user.inspect}"
+
+        render json: user
     end
 
     private

@@ -15,4 +15,8 @@ module LogService
             end
         end
     end
+
+    def timestamp
+        "#{Time.new.strftime("%m-%d-%Y %H:%M:%S")}"
+    end
 end

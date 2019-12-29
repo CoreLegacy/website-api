@@ -22,20 +22,20 @@ class ApplicationController < ActionController::API
     end
 
     def log_request
-        log "Request to '#{request.fullpath}':#{$/}\t#{params}"
+        log "#{$/}Request sent to '#{request.fullpath}':#{$/}\t#{params}{$/}"
 
     end
 
     def log_response
-        log "Response from '#{request.fullpath}':#{$/}\t#{response.body}"
+        log "{$/}Response sent from '#{request.fullpath}':#{$/}\t#{response.body}{$/}"
     end
 
     def error_handler(exception)
         response = ApiResponse.new
         response.add_message exception.message
-        stacktrace = exception.backtrace.join($/)
+        stacktrace = exception.backtrace.join("#{$/}\t")
         response.add_message stacktrace
-        log "#{exception.message}#{$/}#{stacktrace}"
+        log "{$/}{$/}Caught Exception:{$/}\t#{exception.to_s}{$/}\t#{exception.message}#{$/}#{stacktrace}{$/}{$/}"
 
         render json: response, status: :internal_server_error
     end

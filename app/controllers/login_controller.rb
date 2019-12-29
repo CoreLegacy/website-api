@@ -7,13 +7,20 @@ class LoginController < ApplicationController
         response = UserResponse.new
         email = params[:email]
         password = params[:password]
+        status = :ok
 
-        response.user = UserService::authenticate email, password
-        if response.user
-            session[:user_id] = response.user
+        if !email || !password
+            status = :bad_request
+            response = ApiResponse.new
+            response.add_message "Must provide a valid email and password"
+        else
+            response.user = UserService::authenticate email, password
+            if response.user
+                session[:user_id] = response.user
+            end
         end
 
-        render json: response
+        render json: response, status: status
     end
 
     def destroy

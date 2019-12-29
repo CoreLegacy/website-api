@@ -21,7 +21,8 @@ class UsersController < ApplicationController
                 response.add_message "User does not exist."
             end
         else
-            response = UserService::get_all
+            all_users = UserService::get_all
+            response = { all_users: all_users }
         end
 
         render json: response, status: status

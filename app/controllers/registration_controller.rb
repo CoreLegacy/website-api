@@ -94,8 +94,23 @@ class RegistrationController < ApplicationController
 
     def reset_password
         params = user_params
-        key = params[:key]
+
+        if params[:key]
+            render reset_password_with_key params
+        else
+            render reset_password_without_key params
+        end
+    end
+
+    private
+
+    def user_params
+        params.permit :user, :email, :password, :id, :first_name, :last_name, :role, :role_id, :privileges, :key, :old_password, :new_password
+    end
+
+    def reset_password_with_key(params)
         response = ResetPasswordResponse.new
+        status = :ok
 
         log "Resetting password for key: #{key.inspect}"
         password_reset_key = PasswordResetKey.find_by reset_key: key, active: true
@@ -121,19 +136,51 @@ class RegistrationController < ApplicationController
             response.user = UserData.new user
             response.is_successful = true
 
-            render json: UserData.new(user)
+            response = UserData.new(user)
         else
             response.user = nil
             response.is_successful = false
-            response.add_message "No such key is active. Please create a new reset key."
-            render json: response, status: :bad_request
+            response.add_message "Invalid key provided"
+            log "Password reset attempted with invalid key '#{key}'"
+            status = :bad_request
         end
+
+        { json: response, status: status }
     end
 
-    private
+    def reset_password_without_key(params)
+        response = ResetPasswordResponse.new
+        status = :ok
 
-    def user_params
-        params.permit :user, :email, :password, :id, :first_name, :last_name, :role, :role_id, :privileges, :key
+        email = params[:email]
+        old_password = params[:old_password]
+        new_password = params[:new_password]
+
+        response.add_message "Must provide email address" unless email
+        response.add_message "Must provide old password" unless old_password
+        response.add_message "Must provide new password" unless new_password
+
+        if response.messages.length === 0
+            user = User.find_by email: email
+            if user
+                if UserService::authenticate email, old_password
+                    user.password = new_password
+                    user.save
+
+                    response.user = UserData.new user
+                else
+                    response.add_message "Failed to authenticate old password"
+                end
+
+            else
+                response.add_message "User with email address '#{email}' does not exist"
+                status = :bad_request
+            end
+        else
+            status = :bad_request
+        end
+
+        { json: response, status: status }
     end
 
 end

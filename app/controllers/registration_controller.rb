@@ -36,6 +36,7 @@ class RegistrationController < ApplicationController
         reset_key.save
 
         DefaultMailer.with(user_id: user_id, key: reset_key.reset_key).reset_password.deliver
+        render json: { key: reset_key.reset_key }
     end
 
     def update

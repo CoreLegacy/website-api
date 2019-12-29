@@ -14,7 +14,7 @@ DbUtility::upsert(Privilege.new(:name => Privilege::TEXT))
 DbUtility::upsert(Privilege.new(:name => Privilege::EVENTS))
 DbUtility::upsert(Privilege.new(:name => Privilege::BLOG))
 
-seed_user = User.new :first_name => "Database", :last_name => "Seeder", :email => "x@y.com", :password => "abc123", :role_id => Role.find_by(name: Role::ADMIN).id
+seed_user = User.new :first_name => "Database", :last_name => "Seeder", :email => "x@y.com", :password => "abc123", :role_id => Role.find_by(name: Role::ADMIN).id, :active => false
 log seed_user.inspect
 seed_user = DbUtility::upsert seed_user
 log seed_user.inspect

@@ -8,7 +8,5 @@ class CreatePasswordResetKeys < ActiveRecord::Migration[6.0]
             t.datetime :last_updated
             t.integer :last_updated_by
         end
-
-        add_foreign_key :password_reset_keys, :users
     end
 end

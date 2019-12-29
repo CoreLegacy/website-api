@@ -47,6 +47,7 @@ module UserService
             user.role_id = Role.find_by(name: Role::MEMBER).id
         end
 
+        user.save
         log "Created User: #{$/}\t#{user.inspect}"
 
         user

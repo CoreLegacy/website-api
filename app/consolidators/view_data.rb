@@ -5,6 +5,7 @@ class ViewData
     attr_accessor :media
     attr_accessor :texts
     attr_accessor :name
+    attr_accessor :view
 
     def initialize(view)
         self.media = []

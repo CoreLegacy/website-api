@@ -9,11 +9,16 @@ class MediaController < ApplicationController
         params = media_params
 
         if params[:id]
-            response = Medium.find_by_id params[:id]
+            medium = Medium.find_by_id params[:id]
+            response = MediumResponse.new
+            response.medium = MediaData.new medium
         elsif params[:mime_primary_type]
-            response = Medium.joins(:media_types).where(media_types: { mime_primary_type: params[:mime_primary_type] })
+            media = Medium.joins(:media_type).where(media_types: { mime_primary_type: params[:mime_primary_type] })
+            response = MediaResponse.new
+            media.each { |medium| response.media.push MediaData.new medium }
         else
-            response = Medium.all
+            response = MediaResponse.new
+            Medium.all.each { |medium| response.media.push MediaData.new medium }
         end
 
         render json: response
@@ -59,6 +64,7 @@ class MediaController < ApplicationController
             medium.destroy
         else
             status = :bad_request
+            response = ApiResponse.new
             response.add_message "Media does not exist."
         end
 

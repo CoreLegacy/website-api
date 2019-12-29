@@ -5,19 +5,25 @@ class LoginController < ApplicationController
     def create
         params = user_params
         response = UserResponse.new
+        status = :ok
+
         email = params[:email]
         password = params[:password]
-        status = :ok
 
         if !email || !password
             status = :bad_request
-            response = ApiResponse.new
+            response = FlaggedResponse.new
+            response.is_successful = false
             response.add_message "Must provide a valid email and password"
+        elsif UserService::authenticate email, password
+            response.user = User.find_by email: email
+            response.is_successful = true
+            session[:user_id] = response.user.id
         else
-            response.user = UserService::authenticate email, password
-            if response.user
-                session[:user_id] = response.user
-            end
+            status = :bad_request
+            response = FlaggedResponse.new
+            response.is_successful = false
+            response.add_message "Unable to authenticate user."
         end
 
         render json: response, status: status
@@ -25,6 +31,10 @@ class LoginController < ApplicationController
 
     def destroy
         session.clear
+        response = FlaggedResponse.new
+        response.is_successful = true
+
+        render json: response
     end
 
     private

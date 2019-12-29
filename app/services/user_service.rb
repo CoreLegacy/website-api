@@ -68,20 +68,17 @@ module UserService
     end
 
     def authenticate(email, password)
+        is_authenticated = false
         user = User.find_by :email => email
         log "Authenticating email '#{email}' and password '#{password}'#{$/}\t#{user.inspect}"
-        if user
-            user = user.authenticate(password)
-            if user
-                user = UserData.new user
-            else
-                user = nil
-            end
-        else
-            user = nil
+        if user && user.authenticate(password)
+            is_authenticated = true
+            log "User is authenticated"
         end
 
-        user
+        log "Unable to authenticate user" unless is_authenticated
+
+        is_authenticated
     end
 
     def get_privileges(user)

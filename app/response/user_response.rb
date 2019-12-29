@@ -1,6 +1,6 @@
-require_relative "./api_response"
+require_relative "./flagged_response"
 
-class UserResponse < ApiResponse
+class UserResponse < FlaggedResponse
     attr_accessor :user
     attr_accessor :privileges
 

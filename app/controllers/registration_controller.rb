@@ -1,62 +1,101 @@
 require_relative "./application_controller"
+require_relative "../services/user_service"
 require "securerandom"
+
+include UserService
 
 class RegistrationController < ApplicationController
 
     def create
         params = user_params
-        user = UserService::create params
+        response = ApiResponse.new
+        status = :bad_request
 
-        DefaultMailer.with(user_id: user.id).welcome_email.deliver
+        response.add_message "Must provide email address" unless params[:email]
+        response.add_message "Must provide passsword" unless params[:password]
+        response.add_message "User with email address '#{params[:email]}' already exists" if User.find_by(email: params[:email])
 
-        response = UserResponse.new
-        response.user = user
-        response.privileges = []
+        unless response.messages.length > 0
+            user = UserService::create params
 
-        render json: response
+            DefaultMailer.with(user_id: user.id).welcome_email.deliver
+
+            response = UserResponse.new
+            response.user = user
+            response.privileges = []
+            status = :ok
+        end
+
+        render json: response, status: status
     end
 
     def destroy
-        user = UserService.current_user
+        params = user_params
+        email = params[:email]
+        password = params[:password]
+        response = FlaggedResponse.new
+        status = :ok
+
+        user = UserService::authenticate email, password
         if user
             user.active = false
             user.save
+            response.is_successful = true
+            message = "User with email address '#{email}' has been deactivated"
+            log message
+            response.add_message message
+            if UserService.current_user && UserService.current_user.email === user.email
+                session.clear
+                log "Destroyed current user, so session data has been cleared"
+            end
+        else
+            response.is_successful = false
+            response.add_message "Unable to authenticate user"
+            log "Deactivation Authentication for user '#{email}' has failed"
+            status = :bad_request
         end
-        session.clear
+
+        render json: response, status: status
     end
 
-    def reset_password
+    def recover_password
         email = params[:email]
         unless email
-            render json: { messages: ["A valid email must be provided."] }, status: :bad_request
+            response = ApiResponse.new
+            response.add_message "A valid email must be provided."
+            render json: response, status: :bad_request
             return
         end
+        response = RecoverPasswordResponse.new
 
         user = User.find_by email: email
         unless user
-            render json: { messages: ["Unable to find user with email address '#{email}'"] }, status: :bad_request
+            response = ApiResponse.new
+            response.add_message "Unable to find user with email address '#{email}'"
+            render json: response, status: :bad_request
             return
         end
 
         # Check for existing reset key
         reset_key = PasswordResetKey.find_by user_id: user.id, active: true
         if reset_key
-            log "#{$/}Retrieved existing password reset key for #{user.inspect}:#{$/}\t#{reset_key.inspect}{$/}"
+            log "Retrieved existing password reset key for #{user.inspect}:#{$/}\t#{reset_key.inspect}"
         else
             reset_key = PasswordResetKey.create reset_key: SecureRandom.uuid, user_id: user.id, active: true
-            log "#{$/}Generated new password reset key for #{user.inspect}:#{$/}\t#{reset_key.inspect}{$/}"
+            log "Generated new password reset key for #{user.inspect}:#{$/}\t#{reset_key.inspect}"
         end
-
-        log "Created Password Reset Key: #{$/}\t#{reset_key.inspect}"
         reset_key.save
 
-        DefaultMailer.with(user_id: user.id, key: reset_key.reset_key).reset_password.deliver
-        render json: { key: reset_key.reset_key }
+        DefaultMailer.with(user_id: user.id, key: reset_key.reset_key).recover_password.deliver
+        response.key = reset_key.reset_key
+
+        render json: response
     end
 
-    def update
+    def reset_password
         params = user_params
         key = params[:key]
+        response = ResetPasswordResponse.new
 
         log "Resetting password for key: #{key.inspect}"
         password_reset_key = PasswordResetKey.find_by reset_key: key, active: true
@@ -74,14 +113,20 @@ class RegistrationController < ApplicationController
                 reset_key.save
             end
 
-            log "{$/}New Password: #{params[:password]}"
-            log "New Password Digest: #{user.password_digest}"
-            log "Old Password Digest: #{old_password_digest}"
-            log "User: #{user.inspect}{$/}"
+            log "New Password: #{params[:password]}"
+            log "New Password Digest: #{user.password_digest}", false
+            log "Old Password Digest: #{old_password_digest}", false
+            log "User: #{user.inspect}"
 
-            render json: user
+            response.user = UserData.new user
+            response.is_successful = true
+
+            render json: UserData.new(user)
         else
-            render json: { messages: "No such key is active. Please create a new reset key." }, status: :bad_request
+            response.user = null
+            response.is_successful = false
+            response.add_message "No such key is active. Please create a new reset key."
+            render json: response, status: :bad_request
         end
     end
 

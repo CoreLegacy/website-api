@@ -9,8 +9,8 @@ class ApplicationController < ActionController::API
     before_action :set_user
     before_action :log_request
     after_action :log_response
-    rescue_from ::StandardError, with: :error_handler
 
+    rescue_from ::StandardError, with: :error_handler
 
     def set_user
         user_id = session[:user_id]
@@ -22,12 +22,12 @@ class ApplicationController < ActionController::API
     end
 
     def log_request
-        log "#{$/}Request sent to '#{request.fullpath}':#{$/}\t#{params}#{$/}"
+        log "Request sent to '#{request.fullpath}':#{$/}\t#{params}"
 
     end
 
     def log_response
-        log "#{$/}Response sent from '#{request.fullpath}':#{$/}\t#{response.body}#{$/}"
+        log "Response sent from '#{request.fullpath}':#{$/}\t#{response.body}"
     end
 
     def error_handler(exception)
@@ -35,7 +35,7 @@ class ApplicationController < ActionController::API
         response.add_message exception.message
         stacktrace = exception.backtrace.join("#{$/}\t")
         response.add_message stacktrace
-        log "{$/}{$/}Caught Exception:{$/}\t#{exception.to_s}{$/}\t#{exception.message}#{$/}#{stacktrace}{$/}{$/}"
+        log "{$/}Caught Exception:{$/}\t#{exception.to_s}{$/}\t#{exception.message}#{$/}#{stacktrace}{$/}"
 
         render json: response, status: :internal_server_error
     end

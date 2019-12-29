@@ -13,7 +13,7 @@ class UsersController < ApplicationController
         email = params[:email]
 
         if email
-            user = UserService::get user_id
+            user = UserService::get email
             if user
                 response.user = user
             else
@@ -35,7 +35,7 @@ class UsersController < ApplicationController
         response = UserResponse.new
         status = :ok
 
-        if user_id
+        if email
             user = User.find_by email: email
             if user
                 UserService::update user, params

@@ -111,6 +111,7 @@ class RegistrationController < ApplicationController
     def reset_password_with_key(params)
         response = ResetPasswordResponse.new
         status = :ok
+        key = params[:key]
 
         log "Resetting password for key: #{key.inspect}"
         password_reset_key = PasswordResetKey.find_by reset_key: key, active: true

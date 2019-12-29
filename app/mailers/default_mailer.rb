@@ -7,7 +7,7 @@ class DefaultMailer < ApplicationMailer
         mail to: @user.email, subject: "Welcome to Core Legacy!"
     end
 
-    def reset_password
+    def recover_password
         @key = params[:key]
         @user = User.find_by_id params[:user_id]
 

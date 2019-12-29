@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     resources :login, only: [:create, :destroy, :reset_password]
     resources :media
     resources :registration, only: [:create, :destroy]
-    post '/registration/password/request', to: 'registration#reset_password'
-    post '/registration/password/reset', to: 'registration#update'
+    post '/registration/password/recover', to: 'registration#recover_password'
+    post '/registration/password/reset', to: 'registration#reset_password'
 
 end

@@ -123,7 +123,7 @@ class RegistrationController < ApplicationController
 
             render json: UserData.new(user)
         else
-            response.user = null
+            response.user = nil
             response.is_successful = false
             response.add_message "No such key is active. Please create a new reset key."
             render json: response, status: :bad_request

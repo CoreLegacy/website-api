@@ -3,13 +3,13 @@ module LogService
     def log(log, pad_with_newlines = true)
         if log.is_a?(String) || log.is_a?(Numeric)
             if pad_with_newlines
-                puts "#{$/}log#{$/}"
+                puts "#{$/}#{log}#{$/}"
             else
                 puts log
             end
         else
             if pad_with_newlines
-                puts "#{$/}log.inspect{$/}"
+                puts "#{$/}#{log.inspect}{$/}"
             else
                 puts log.inspect
             end

@@ -13,6 +13,10 @@ class ViewsController < ApplicationController
         render json: response
     end
 
+    def update
+        
+    end
+
     private
 
     def view_params

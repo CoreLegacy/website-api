@@ -1,4 +1,7 @@
+require_relative "./service_base"
+
 module MediaStorageService
+    include ServiceBase
 
     def store(upload_data, medium)
         bucket_name = Rails.application.config.S3_BUCKET_NAME

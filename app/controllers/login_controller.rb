@@ -9,8 +9,10 @@ class LoginController < ApplicationController
         password = params[:password]
 
         response.user = UserService::authenticate email, password
+        if response.user
+            session[:user_id] = response.user
+        end
 
-        
         render json: response
     end
 

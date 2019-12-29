@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_27_155510) do
+ActiveRecord::Schema.define(version: 2019_12_29_021752) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,15 @@ ActiveRecord::Schema.define(version: 2019_12_27_155510) do
   create_table "media_types", force: :cascade do |t|
     t.string "mime_primary_type"
     t.string "mime_sub_type"
+    t.datetime "created"
+    t.datetime "last_updated"
+    t.integer "last_updated_by"
+  end
+
+  create_table "password_reset_keys", force: :cascade do |t|
+    t.string "reset_key"
+    t.integer "user_id"
+    t.boolean "active"
     t.datetime "created"
     t.datetime "last_updated"
     t.integer "last_updated_by"
@@ -97,6 +106,7 @@ ActiveRecord::Schema.define(version: 2019_12_27_155510) do
     t.datetime "created"
     t.datetime "last_updated"
     t.integer "last_updated_by"
+    t.boolean "active"
   end
 
   create_table "view_media", force: :cascade do |t|
@@ -127,6 +137,7 @@ ActiveRecord::Schema.define(version: 2019_12_27_155510) do
   add_foreign_key "events", "users", column: "last_updated_by"
   add_foreign_key "media", "users", column: "last_updated_by"
   add_foreign_key "media_types", "users", column: "last_updated_by"
+  add_foreign_key "password_reset_keys", "users"
   add_foreign_key "privileges", "users", column: "last_updated_by"
   add_foreign_key "roles", "users", column: "last_updated_by"
   add_foreign_key "staffs", "users"

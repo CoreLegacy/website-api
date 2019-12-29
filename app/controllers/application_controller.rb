@@ -15,11 +15,10 @@ class ApplicationController < ActionController::API
     def set_user
         user_id = session[:user_id]
         if user_id
-            @current_user = User.find user_id
+            UserService::current_user = User.find_by_id user_id
         else
-            @current_user = nil
+            UserService::current_user = nil
         end
-        UserService::current_user = @current_user
     end
 
     def log_request

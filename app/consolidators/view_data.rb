@@ -16,10 +16,10 @@ class ViewData
             view_media = ViewMedium.where view_id: view.id
             view_media.each do |view_medium|
                 media_data = MediaData.new
-                medium = Medium.find view_medium.medium_id
+                medium = Medium.find_by_id view_medium.medium_id
                 media_data.identifier = view_medium.identifier
                 media_data.uri = medium.uri
-                media_data.media_type = MediaType.find(medium.media_type_id).description
+                media_data.media_type = MediaType.find_by_id(medium.media_type_id).description
                 self.media.push media_data
             end
 
@@ -27,7 +27,7 @@ class ViewData
             view_texts.each do |view_text|
                 text_data = TextData.new
                 text_data.identifier = view_text.identifier
-                text_data.content = Text.find view_text.text_id
+                text_data.content = Text.find_by_id view_text.text_id
                 self.texts.push text_data
             end
         end

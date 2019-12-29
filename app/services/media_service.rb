@@ -1,11 +1,13 @@
 require "aws-sdk-s3"
 require_relative "../../db/db_utility"
 require_relative "./media_storage_service"
+require_relative "./service_base"
 
 include MediaStorageService
 include DbUtility
 
 module MediaService
+    include ServiceBase
 
     def upsert_media(upload_data)
         media_type = MediaType.new

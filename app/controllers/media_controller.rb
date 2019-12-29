@@ -7,8 +7,11 @@ class MediaController < ApplicationController
 
     def index
         params = media_params
+
         if params[:id]
-            response = Medium.find params[:id]
+            response = Medium.find_by_id params[:id]
+        elsif params[:mime_primary_type]
+            response = Medium.joins(:media_types).where(media_types: { mime_primary_type: params[:mime_primary_type] })
         else
             response = Medium.all
         end
@@ -25,7 +28,6 @@ class MediaController < ApplicationController
             content_type = content_type.split "/"
             # Remove optional parameters from subtype (starts with semicolon)
             content_type[1] = content_type[1][/^[^;]*/]
-            puts "Content SubType after sub: #{content_type[1]}"
         else
             content_type = %w{image jpg}
         end
@@ -42,13 +44,31 @@ class MediaController < ApplicationController
     end
 
     def destroy
-        session.clear
+        params = media_params
+        medium_id = params[:id]
+        status = :ok
+
+        response = MediaDeleteResponse.new
+        response.views_affected = []
+        medium = Medium.find_by_id medium_id
+        if medium
+            ViewMedium.where(medium_id: medium.id).each do |view_medium|
+                response.views_affected.push View.find_by_id(view_medium.id).name
+                view_medium.destroy
+            end
+            medium.destroy
+        else
+            status = :bad_request
+            response.add_message "Media does not exist."
+        end
+
+        render json: response, status: status
     end
 
     private
 
     def media_params
-        params.permit :user, :media_data, :title, :type, :sub_type, :id
+        params.permit :user, :media_data, :title, :mime_primary_type, :mime_sub_type, :id
     end
 
 end

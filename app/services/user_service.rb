@@ -1,6 +1,9 @@
+require_relative "./service_base"
+
 module UserService
+    include ServiceBase
+
     def self.current_user
-        puts "Getting current user"
         Thread.current[:user] ? Thread.current[:user] : nil
     end
 
@@ -13,12 +16,21 @@ module UserService
     end
 
     def get(user_id)
-        user = User.find user_id
+        user = User.find_by_id user_id
         if user
-            user = UserData.new user
+            UserData.new user
         else
             nil
         end
+    end
+
+    def get_all
+        result = []
+        User.all.each do |user|
+            result.push UserData.new user
+        end
+
+        result
     end
 
     def create(params)
@@ -27,8 +39,7 @@ module UserService
         user.password = params[:password]
         user.first_name = params[:first_name]
         user.last_name = params[:last_name]
-
-        puts params.inspect
+        user.active = true
 
         if params[:role]
             user.role_id = Role.find_by(name: params[:role]).id
@@ -36,16 +47,34 @@ module UserService
             user.role_id = Role.find_by(name: Role::MEMBER).id
         end
 
-        puts user.save.inspect
+        log "Created User: #{$/}\t#{user.inspect}"
+
         user
+    end
+
+    def update(user, params)
+        user_params = [:first_name, :last_name, :email, :password]
+        user_params.each do |key, value|
+            if params[key]
+                set_property user, key, value
+            end
+        end
+
+        log "Updated User:  #{$/}\t#{user.inspect}"
+
+
+        user.save
     end
 
     def authenticate(email, password)
         user = User.find_by :email => email
-        LogService::log user
         if user
             user = user.authenticate(password)
-            user = UserData.new user
+            if user
+                user = UserData.new user
+            else
+                user = nil
+            end
         else
             user = nil
         end

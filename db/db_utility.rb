@@ -1,42 +1,7 @@
+require_relative "../app/services/log_service"
+
 module DbUtility
-
-    # This method will either update an existing record or it will
-    # create a new record if one does not already exist. It will pass
-    # the "keys" parameter as the argument to the "find_by" function
-    # of the active record class specified by type. If the record is
-    # found, it will update the fields specified by the "data" hash.
-    # If the record is not found, it will create a new record for the
-    # active record.
-    #
-    # type:
-    #   the class of the active record to be queried against
-    # keys:
-    #   a hash of the fields used to identify the record
-    # data:
-    #   a hash of the data to be saved in the record
-    def upsert_data(type, keys, data)
-        puts "Upserting #{type}: \n\tKeys: #{keys}\n\tData: #{data}"
-
-
-        # Attempt to retrieve the record using the keys provided
-        record = type.find_by keys
-        # If the record exists already, just update the fields
-        # provided in the "data" hash and save it
-        if record
-            puts "Updating #{type}: #{data}"
-            data.each do |key, value|
-                record.send("#{key}=", value)
-            end
-            # If the record was NOT found, just create a new record
-        else
-            puts "Inserting #{type}: #{data}"
-            record = type.create data
-        end
-
-        puts record.save.errors
-
-        record
-    end
+    include LogService
 
     def upsert(model)
         record = model
@@ -48,13 +13,13 @@ module DbUtility
             # If the record exists already, just update the fields
             # provided in the "data" hash and save it
             if record
-                puts "Updating #{type}: #{data}"
+                log "Updating #{type}: #{data}"
                 data.each do |key, value|
                     record.send("#{key}=", value)
                 end
                 # If the record was NOT found, just create a new record
             else
-                puts "Inserting #{type}: #{data}"
+                log "Inserting #{type}: #{data}"
                 record = type.create data
             end
 
@@ -62,12 +27,12 @@ module DbUtility
 
             if record.errors
                 record.errors.each do |error|
-                    puts error
+                    log error
                 end
             end
         rescue => exception
-            puts "#{type}: unable to update model #{record.inspect}"
-            puts exception.to_s
+            log "#{type}: unable to update model #{record.inspect}"
+            log exception.to_s
         end
 
         record

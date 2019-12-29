@@ -22,12 +22,12 @@ class ApplicationController < ActionController::API
     end
 
     def log_request
-        log "#{$/}Request sent to '#{request.fullpath}':#{$/}\t#{params}{$/}"
+        log "#{$/}Request sent to '#{request.fullpath}':#{$/}\t#{params}#{$/}"
 
     end
 
     def log_response
-        log "{$/}Response sent from '#{request.fullpath}':#{$/}\t#{response.body}{$/}"
+        log "#{$/}Response sent from '#{request.fullpath}':#{$/}\t#{response.body}#{$/}"
     end
 
     def error_handler(exception)

@@ -43,14 +43,14 @@ class RegistrationController < ApplicationController
         if reset_key
             log "#{$/}Retrieved existing password reset key for #{user.inspect}:#{$/}\t#{reset_key.inspect}{$/}"
         else
-            reset_key = PasswordResetKey.create reset_key: SecureRandom.uuid, user_id: user_id, active: true
+            reset_key = PasswordResetKey.create reset_key: SecureRandom.uuid, user_id: user.id, active: true
             log "#{$/}Generated new password reset key for #{user.inspect}:#{$/}\t#{reset_key.inspect}{$/}"
         end
 
         log "Created Password Reset Key: #{$/}\t#{reset_key.inspect}"
         reset_key.save
 
-        DefaultMailer.with(user_id: user_id, key: reset_key.reset_key).reset_password.deliver
+        DefaultMailer.with(user_id: user.id, key: reset_key.reset_key).reset_password.deliver
         render json: { key: reset_key.reset_key }
     end
 

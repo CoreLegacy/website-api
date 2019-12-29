@@ -10,15 +10,15 @@ class UsersController < ApplicationController
         response = UserResponse.new
         status = :ok
 
-        user_id = params[:id]
+        email = params[:email]
 
-        if user_id
+        if email
             user = UserService::get user_id
             if user
                 response.user = user
             else
                 status = :bad_request
-                response.add_message "User does not exist."
+                response.add_message "User with email address '#{email}' does not exist."
             end
         else
             all_users = UserService::get_all
@@ -30,22 +30,22 @@ class UsersController < ApplicationController
 
     def update
         params = user_params
-        user_id = params[:id]
+        email = params[:email]
 
         response = UserResponse.new
         status = :ok
 
         if user_id
-            user = User.find_by_id user_id
+            user = User.find_by email: email
             if user
                 UserService::update user, params
             else
                 status = :bad_request
-                response.message = "User does not exist."
+                response.add_message "User with email address ''#{email}'' does not exist."
             end
         else
             status = :bad_request
-            response.messages = "Must provide user's ID"
+            response.add_message "Must provide user's email address"
         end
 
         render json: response, status: status

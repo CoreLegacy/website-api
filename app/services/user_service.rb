@@ -15,8 +15,8 @@ module UserService
         end
     end
 
-    def get(user_id)
-        user = User.find_by_id user_id
+    def get(email)
+        user = User.find_by email: email
         if user
             UserData.new user
         else

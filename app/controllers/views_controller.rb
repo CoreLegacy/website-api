@@ -1,8 +1,9 @@
 require_relative './application_controller'
 require_relative '../services/view_service'
 
+include ViewService
+
 class ViewsController < ApplicationController
-    include ViewService
 
     def index
         params = view_params
@@ -14,7 +15,7 @@ class ViewsController < ApplicationController
     end
 
     def update
-        
+
     end
 
     private

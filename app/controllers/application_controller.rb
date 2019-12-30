@@ -1,9 +1,11 @@
 require_relative "../services/user_service"
 require_relative "../services/log_service"
+require "jbuilder"
 
 include UserService
 
 class ApplicationController < ActionController::API
+    include ActionController::ImplicitRender
     include LogService
 
     before_action :set_user
@@ -35,7 +37,7 @@ class ApplicationController < ActionController::API
         response.add_message exception.message
         stacktrace = exception.backtrace.join("#{$/}\t")
         response.add_message stacktrace
-        log "{$/}Caught Exception:{$/}\t#{exception.to_s}{$/}\t#{exception.message}#{$/}#{stacktrace}{$/}"
+        log "#{$/}Caught Exception:#{$/}\t#{exception.to_s}#{$/}\t#{exception.message}#{$/}#{stacktrace}#{$/}"
 
         render json: response, status: :internal_server_error
     end

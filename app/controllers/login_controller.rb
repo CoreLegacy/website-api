@@ -16,9 +16,11 @@ class LoginController < ApplicationController
             response.is_successful = false
             response.add_message "Must provide a valid email and password"
         elsif UserService::authenticate email, password
-            response.user = User.find_by email: email
+            user = User.find_by(email: email)
+            session[:user_id] = user.id
+
+            response.user = UserData.new(user)
             response.is_successful = true
-            session[:user_id] = response.user.id
         else
             status = :bad_request
             response = FlaggedResponse.new

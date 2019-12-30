@@ -16,11 +16,12 @@ class ViewData
 
             view_media = ViewMedium.where view_id: view.id
             view_media.each do |view_medium|
+                log "View Medium: #{view_medium.inspect}"
                 media_data = MediaData.new
                 medium = Medium.find_by_id view_medium.medium_id
                 media_data.identifier = view_medium.identifier
                 media_data.uri = medium.uri
-                media_data.media_type = MediaType.find_by_id(medium.media_type_id).description
+                media_data.media_type = MediaType.find_by_id(medium.media_type_id)
                 self.media.push media_data
             end
 

@@ -6,6 +6,7 @@ class MediaData < Consolidator
     attr_accessor :file_extension
     attr_accessor :checksum
     attr_accessor :title
+    attr_accessor :identifier
 
     def initialize(medium = nil)
         super medium

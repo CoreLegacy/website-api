@@ -5,6 +5,8 @@ require_relative '../../app/mailers/default_mailer'
 class UsersController < ApplicationController
     include UserService
 
+    skip_before_action :authorize, only: :exists
+
     def index
         params = user_params
         response = UserResponse.new
@@ -16,8 +18,9 @@ class UsersController < ApplicationController
             user = UserService::get email
             if user
                 response.user = user
+                response.is_successful = true
             else
-                status = :bad_request
+                response.is_successful = false
                 response.add_message "User with email address '#{email}' does not exist."
             end
         else
@@ -26,6 +29,18 @@ class UsersController < ApplicationController
         end
 
         render json: response, status: status
+    end
+
+    def exists
+        params = user_params
+        email = params[:email]
+        response = FlaggedResponse.new
+        response.is_successful = false
+        if email
+            response.is_successful = User.exists? email: email
+        end
+
+        render json: response
     end
 
     def update

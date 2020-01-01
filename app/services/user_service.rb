@@ -73,7 +73,7 @@ module UserService
         log "Authenticating email '#{email}' and password '#{password}'#{$/}\t#{user.inspect}"
         if user && user.authenticate(password)
             is_authenticated = true
-            log "User is authenticated"
+            log "Authenticated user's email and password via UserService::authenticate"
         end
 
         log "Unable to authenticate user" unless is_authenticated

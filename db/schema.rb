@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_29_021752) do
+ActiveRecord::Schema.define(version: 2020_01_01_162744) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -107,6 +107,8 @@ ActiveRecord::Schema.define(version: 2019_12_29_021752) do
     t.datetime "last_updated"
     t.integer "last_updated_by"
     t.boolean "active"
+    t.string "auth_token"
+    t.datetime "last_request_time"
   end
 
   create_table "view_media", force: :cascade do |t|
@@ -137,7 +139,6 @@ ActiveRecord::Schema.define(version: 2019_12_29_021752) do
   add_foreign_key "events", "users", column: "last_updated_by"
   add_foreign_key "media", "users", column: "last_updated_by"
   add_foreign_key "media_types", "users", column: "last_updated_by"
-  add_foreign_key "password_reset_keys", "users"
   add_foreign_key "privileges", "users", column: "last_updated_by"
   add_foreign_key "roles", "users", column: "last_updated_by"
   add_foreign_key "staffs", "users"

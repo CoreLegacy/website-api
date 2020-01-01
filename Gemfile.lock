@@ -965,6 +965,7 @@ GEM
     jbuilder (2.9.1)
       activesupport (>= 4.2.0)
     jmespath (1.4.0)
+    jwt (2.2.1)
     loofah (2.4.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -1054,6 +1055,7 @@ DEPENDENCIES
   bundler
   byebug
   jbuilder
+  jwt
   pg (>= 0.18, < 2.0)
   puma (~> 4.1)
   rack-cors

@@ -43,3 +43,4 @@ gem "aws-sdk"
 gem 'rails_12factor'
 gem 'bundler'
 gem 'jbuilder'
+gem 'jwt'

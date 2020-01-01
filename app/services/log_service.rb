@@ -16,6 +16,11 @@ module LogService
         end
     end
 
+    def log_error(exception)
+        stacktrace = exception.backtrace.join("#{$/}\t")
+        puts "#{$/}Caught Exception: '#{exception.to_s}'#{$/}\t#{exception.message}#{$/}#{stacktrace}#{$/}"
+    end
+
     def timestamp
         "#{Time.new.strftime("%m-%d-%Y %H:%M:%S")}"
     end

@@ -5,6 +5,8 @@ include ViewService
 
 class ViewsController < ApplicationController
 
+    skip_before_action :authorize
+
     def index
         params = view_params
 

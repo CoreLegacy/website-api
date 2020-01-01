@@ -24,16 +24,19 @@ module DbUtility
             end
 
             record.save
-
-            if record.errors
-                record.errors.each do |error|
-                    log error
-                end
-            end
+            log "Finished upserting #{type}:#{$/}\t#{record.inspect}", false
         rescue => exception
             log "#{type}: unable to update model #{record.inspect}"
             log exception.to_s
         end
+
+        if record.errors.any?
+            log "Errors occurred while Upserting #{type}:", false
+            record.errors.messages.each do |attribute, error|
+                log "\t#{attribute}: #{error}", false
+            end
+        end
+
 
         record
     end

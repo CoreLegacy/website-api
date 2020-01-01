@@ -8,11 +8,11 @@ class ApplicationRecord < ActiveRecord::Base
     before_save :set_last_updated
 
     def set_created_timestamp
-        self.created = DateTime.now
+        self.created = Time.now
     end
 
     def set_last_updated
-        self.last_updated = DateTime.now
+        self.last_updated = Time.now
         user = UserService.current_user
         if user
             self.last_updated_by = user.id

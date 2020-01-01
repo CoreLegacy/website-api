@@ -85,9 +85,13 @@ Rails.application.configure do
     ###################
     # Custom Settings #
     ###################
-
+    #
+    config.force_ssl = true
     config.require_master_key = true
     config.ENVIRONMENT = :prod
+
+    config.IDLE_TIMEOUT = 10.minutes
+    config.JWT_EXPIRY = 8
 
     config.action_mailer.default_url_options = { :host => 'https://corelegacy-org-api.herokuapp.com' }
     config.action_mailer.raise_delivery_errors = true

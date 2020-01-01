@@ -3,7 +3,6 @@ require "securerandom"
 
 class Medium < ApplicationRecord
     validates_presence_of :checksum, :uri
-    belongs_to :media_type
 
     before_save :remove_media_root_uri
     after_find :set_relations

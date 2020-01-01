@@ -6,6 +6,8 @@ include UserService
 
 class RegistrationController < ApplicationController
 
+    skip_before_action :authorize
+
     def create
         params = user_params
         response = ApiResponse.new
@@ -45,14 +47,13 @@ class RegistrationController < ApplicationController
             log message
             response.add_message message
             if UserService.current_user && UserService.current_user.email === user.email
-                session.clear
-                log "Destroyed current user, so session data has been cleared"
+                UserService.current_user.auth_token = nil
+                log "Destroyed user, so token data has been cleared"
             end
         else
             response.is_successful = false
             response.add_message "Unable to authenticate user"
             log "Deactivation Authentication for user '#{email}' has failed"
-            status = :bad_request
         end
 
         render json: response, status: status
@@ -87,7 +88,6 @@ class RegistrationController < ApplicationController
         reset_key.save
 
         DefaultMailer.with(user_id: user.id, key: reset_key.reset_key).recover_password.deliver
-        response.key = reset_key.reset_key
 
         render json: response
     end

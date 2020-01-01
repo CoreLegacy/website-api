@@ -43,7 +43,11 @@ Rails.application.configure do
     # Custom Settings #
     ###################
 
+    config.require_master_key = true
     config.ENVIRONMENT = :dev
+
+    config.IDLE_TIMEOUT = 2.hours.minutes
+    config.JWT_EXPIRY = 100
 
     config.action_mailer.raise_delivery_errors = true
     config.action_mailer.perform_deliveries = true

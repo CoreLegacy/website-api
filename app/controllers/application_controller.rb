@@ -15,7 +15,6 @@ class ApplicationController < ActionController::API
     before_action :set_user
     before_action :authorize
     before_action :log_request
-    after_action :fuck_cors
     after_action :log_response
     after_action :cookie_inspect
 
@@ -70,11 +69,6 @@ class ApplicationController < ActionController::API
 
     def log_request
         log "#{timestamp}#{$/}Request sent to '#{request.fullpath}':#{$/}\t#{params}"
-
-    end
-
-    def fuck_cors
-        response.set_header "Access-Control-Allow-Origin", "*"
     end
 
     def log_response

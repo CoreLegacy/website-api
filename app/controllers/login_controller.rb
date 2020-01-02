@@ -34,7 +34,7 @@ class LoginController < ApplicationController
             response.is_successful = true
         else
             response.is_successful = false
-            response.add_message "Unable to authenticate user."
+            response.add_message "Tried to log in but was unable to authenticate user."
         end
 
         render json: response, status: status

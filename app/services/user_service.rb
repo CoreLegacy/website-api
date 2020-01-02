@@ -76,7 +76,7 @@ module UserService
             log "Authenticated user's email and password via UserService::authenticate"
         end
 
-        log "Unable to authenticate user" unless is_authenticated
+        log "User service is unable to authenticate user #{email}" unless is_authenticated
 
         is_authenticated
     end

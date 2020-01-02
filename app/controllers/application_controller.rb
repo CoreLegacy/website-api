@@ -85,7 +85,7 @@ class ApplicationController < ActionController::API
 
     def error_handler(exception)
         response = ApiResponse.new
-        if Rails.application.config.ENVIRONMENT === :prod
+        if Rails.env.production?
             response.add_message "A server error occurred. Contact an administrator if error continues."
         else
             response.add_message exception.message

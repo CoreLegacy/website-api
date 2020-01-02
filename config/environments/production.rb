@@ -85,10 +85,9 @@ Rails.application.configure do
     ###################
     # Custom Settings #
     ###################
-    #
+    config.serve_static_assets = true
     config.force_ssl = true
     config.require_master_key = true
-    config.ENVIRONMENT = :prod
 
     config.IDLE_TIMEOUT = 10.minutes
     config.JWT_EXPIRY = 8

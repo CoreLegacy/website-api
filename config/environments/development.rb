@@ -42,9 +42,8 @@ Rails.application.configure do
     ###################
     # Custom Settings #
     ###################
-
+    config.serve_static_assets = true
     config.require_master_key = true
-    config.ENVIRONMENT = :dev
 
     config.IDLE_TIMEOUT = 2.hours.minutes
     config.JWT_EXPIRY = 100

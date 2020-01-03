@@ -6,7 +6,7 @@ module JwtService
 
     def self.encode(payload)
         log "Encoding JWT Payload: #{payload}"
-        secret = Rails.application.secrets.secret_key_base
+        secret = Rails.application.credentials.secret_key_base
         log "Secret Key for JWT Hash: #{secret}"
         JWT.encode(payload, secret)
     end

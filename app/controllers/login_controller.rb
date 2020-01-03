@@ -20,10 +20,15 @@ class LoginController < ApplicationController
             response.add_message "Must provide a valid email and password"
         elsif UserService::authenticate email, password
             user = User.find_by(email: email)
+            log "User authenticated: #{user.inspect}"
             expiry = Rails.application.config.JWT_EXPIRY.hours.from_now
-            log "System Expiry: #{expiry}"
-            auth_token = JwtService::encode({ user_id: user.id, expiry: expiry })
-            cookies[:auth_token] = { value: auth_token }
+            payload = { user_id: user.id, expiry: expiry }
+            log "JWT Payload: #{payload}"
+            auth_token = JwtService::encode(payload)
+            if !with_auth_token
+                cookies[:auth_token] = { value: auth_token }
+            end
+
             user.auth_token = auth_token
             user.save
 

@@ -13,7 +13,7 @@ module JwtService
 
     def self.decode(token)
         begin
-            hash = HashWithIndifferentAccess.new(JWT.decode(token, Rails.application.secrets.secret_key_base)[0])
+            hash = HashWithIndifferentAccess.new(JWT.decode(token, Rails.application.credentials.secret_key_base)[0])
             return hash
         rescue => exception
             log_error exception

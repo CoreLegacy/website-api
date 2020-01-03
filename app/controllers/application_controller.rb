@@ -4,7 +4,7 @@ require_relative '../services/jwt_service'
 require "jbuilder"
 
 include UserService
-include JWTService
+include JwtService
 
 class ApplicationController < ActionController::API
     include AbstractController::Helpers
@@ -47,7 +47,7 @@ class ApplicationController < ActionController::API
         log "#{$/}#{$/}AUTHORIZATION BEGINNING#{$/}#{$/}"
         user = UserService::current_user
         if user
-            auth_token = JWTService::decode user.auth_token
+            auth_token = JwtService::decode user.auth_token
             # If user has idle too long or JWT has expired, redirect them to the logout action
             log "Auth Token: #{auth_token}", false
             expiry = auth_token[:expiry].to_time
@@ -101,7 +101,7 @@ class ApplicationController < ActionController::API
 
     def process_auth_token(auth_token_raw)
         log "Raw JWT: #{auth_token_raw}"
-        auth_token = JWTService::decode auth_token_raw
+        auth_token = JwtService::decode auth_token_raw
         log "Decoded JWT: #{auth_token}"
         if auth_token
             now = Time.now

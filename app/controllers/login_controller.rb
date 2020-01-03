@@ -22,7 +22,7 @@ class LoginController < ApplicationController
             user = User.find_by(email: email)
             expiry = Rails.application.config.JWT_EXPIRY.hours.from_now
             log "System Expiry: #{expiry}"
-            auth_token = JWTService::encode({ user_id: user.id, expiry: expiry })
+            auth_token = JwtService::encode({ user_id: user.id, expiry: expiry })
             cookies[:auth_token] = { value: auth_token }
             user.auth_token = auth_token
             user.save

@@ -1,7 +1,7 @@
 require 'jwt'
 
 include JWT
-module JWTService
+module JwtService
     include LogService
 
     def self.encode(payload)

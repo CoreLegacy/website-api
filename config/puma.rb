@@ -12,7 +12,6 @@ threads min_threads_count, max_threads_count
 #
 port ENV.fetch("PORT") { Rails.application.config.DEFAULT_PORT }
 
-end }
 
 # Specifies the `environment` that Puma will run in.
 #

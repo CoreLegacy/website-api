@@ -1,6 +1,6 @@
 require_relative "../services/user_service"
 require_relative "../services/log_service"
-require_relative '../../app/services/jwt_service'
+require_relative '../services/jwt_service'
 require "jbuilder"
 
 include UserService

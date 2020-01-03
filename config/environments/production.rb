@@ -85,6 +85,9 @@ Rails.application.configure do
     ###################
     # Custom Settings #
     ###################
+
+    config.DEFAULT_PORT = 3000
+
     config.serve_static_assets = true
     config.force_ssl = true
     config.require_master_key = true

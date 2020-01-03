@@ -42,6 +42,9 @@ Rails.application.configure do
     ###################
     # Custom Settings #
     ###################
+
+    config.DEFAULT_PORT = 8080
+
     config.serve_static_assets = true
     config.require_master_key = true
 

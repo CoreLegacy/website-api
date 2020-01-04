@@ -10,7 +10,7 @@ class RegistrationController < ApplicationController
 
     def create
         params = user_params
-        response = ApiResponse.new
+        response = FlaggedResponse.new
         status = :bad_request
         with_auth_token = params[:with_auth_token]
 
@@ -37,7 +37,7 @@ class RegistrationController < ApplicationController
             end
             response.user = user
             response.privileges = []
-            response.is_successful = true;
+            response.is_successful = true
 
             status = :ok
         else

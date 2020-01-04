@@ -20,7 +20,7 @@ class RegistrationController < ApplicationController
         response.add_message "Must provide passsword" unless params[:password]
         response.add_message "User with email address '#{params[:email]}' already exists" if User.find_by(email: params[:email])
 
-        unless response.messages.length > 0
+        if response.messages === 0
             user = UserService::create params
 
             expiry = Rails.application.config.JWT_EXPIRY.hours.from_now
@@ -37,8 +37,11 @@ class RegistrationController < ApplicationController
             end
             response.user = user
             response.privileges = []
+            response.is_successful = true;
 
             status = :ok
+        else
+            response.is_successful = false
         end
 
         render json: response, status: status

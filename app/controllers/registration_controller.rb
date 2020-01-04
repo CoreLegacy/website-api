@@ -12,6 +12,9 @@ class RegistrationController < ApplicationController
         params = user_params
         response = ApiResponse.new
         status = :bad_request
+        with_auth_token = params[:with_auth_token]
+
+        log "Creating user with auth token"
 
         response.add_message "Must provide email address" unless params[:email]
         response.add_message "Must provide passsword" unless params[:password]
@@ -20,11 +23,21 @@ class RegistrationController < ApplicationController
         unless response.messages.length > 0
             user = UserService::create params
 
+            expiry = Rails.application.config.JWT_EXPIRY.hours.from_now
+            payload = { user_id: user.id, expiry: expiry }
+            log "JWT Payload: #{payload}"
+            auth_token = JwtService::encode(payload)
+            cookies[:auth_token] = { value: auth_token }
+
             DefaultMailer.with(user_id: user.id).welcome_email.deliver
 
             response = UserResponse.new
+            if with_auth_token
+                response.auth_token = auth_token
+            end
             response.user = user
             response.privileges = []
+
             status = :ok
         end
 
@@ -88,6 +101,7 @@ class RegistrationController < ApplicationController
         reset_key.save
 
         DefaultMailer.with(user_id: user.id, key: reset_key.reset_key).recover_password.deliver
+        response.is_successful = true
 
         render json: response
     end
@@ -105,7 +119,7 @@ class RegistrationController < ApplicationController
     private
 
     def user_params
-        params.permit :user, :email, :password, :id, :first_name, :last_name, :role, :role_id, :privileges, :key, :old_password, :new_password
+        params.permit :user, :email, :password, :id, :first_name, :last_name, :role, :role_id, :privileges, :key, :old_password, :new_password, :with_auth_token
     end
 
     def reset_password_with_key(params)

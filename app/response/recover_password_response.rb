@@ -1,6 +1,6 @@
-require_relative "./api_response"
+require_relative "./flagged_response"
 
-class RecoverPasswordResponse < ApiResponse
+class RecoverPasswordResponse < FlaggedResponse
     attr_accessor :key
 
     def initialize

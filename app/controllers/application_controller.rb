@@ -83,20 +83,29 @@ class ApplicationController < ActionController::API
     end
 
     def error_handler(exception)
-        response = ApiResponse.new
+        api_response = ApiResponse.new
+
         if Rails.env.production?
-            response.add_message "A server error occurred. Contact an administrator if error continues."
+            api_response.add_message "A server error occurred. Contact an administrator if error continues."
         else
-            response.add_message exception.message
+            api_response.add_message exception.message
             stacktrace = exception.backtrace.join("#{$/}\t")
-            response.add_message stacktrace
+            api_response.add_message stacktrace
         end
 
         status = @is_forbidden ? :forbidden : :internal_server_error
 
-        log_error exception
+        context = ExceptionContext.new
+        context.message = "Unhandled Exception"
+        context.user = UserService::current_user
+        context.token_payload = JwtService.decode(context.user.auth_token) if context.user && context.user.auth_token
+        context.exception = exception
+        context.request = request
+        context.response = response
+        context.severity = ExceptionLog::CRITICAL
+        log_error context
 
-        render json: response, status: status
+        render json: api_response, status: status
     end
 
     def process_auth_token(auth_token_raw)

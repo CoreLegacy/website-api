@@ -13,6 +13,8 @@ class ViewsController < ApplicationController
         response = ViewResponse.new
         response.view = ViewService.get_view_data params[:name]
 
+        raise "Testing Error Logger"
+
         render json: response
     end
 

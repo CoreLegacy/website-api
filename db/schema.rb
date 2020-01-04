@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_01_162744) do
+ActiveRecord::Schema.define(version: 2020_01_04_212159) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,26 @@ ActiveRecord::Schema.define(version: 2020_01_01_162744) do
     t.datetime "created"
     t.datetime "last_updated"
     t.integer "last_updated_by"
+  end
+
+  create_table "exception_logs", force: :cascade do |t|
+    t.datetime "created"
+    t.datetime "last_updated"
+    t.integer "last_updated_by"
+    t.integer "user_id"
+    t.string "token_payload"
+    t.string "log_message"
+    t.string "exception_message"
+    t.string "stacktrace"
+    t.string "ip_address"
+    t.string "request"
+    t.string "response"
+    t.string "params"
+    t.string "raw_request"
+    t.string "raw_response"
+    t.integer "severity"
+    t.string "response_body"
+    t.string "request_params"
   end
 
   create_table "media", force: :cascade do |t|

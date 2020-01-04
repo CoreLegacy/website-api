@@ -11,7 +11,7 @@ class RegistrationController < ApplicationController
     def create
         params = user_params
         response = FlaggedResponse.new
-        status = :bad_request
+        status = :ok
         with_auth_token = params[:with_auth_token]
 
         log "Creating user with auth token"
@@ -38,8 +38,6 @@ class RegistrationController < ApplicationController
             response.user = user
             response.privileges = []
             response.is_successful = true
-
-            status = :ok
         else
             response.is_successful = false
         end

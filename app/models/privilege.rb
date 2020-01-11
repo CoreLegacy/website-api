@@ -5,6 +5,7 @@ class Privilege < ApplicationRecord
     TEXT = "text"
     EVENTS = "events"
     BLOG = "blog"
+    DELEGATOR = "delegator"
 
     validates_uniqueness_of :name
     validates_presence_of :name

@@ -9,5 +9,6 @@ Rails.application.routes.draw do
     resources :registration, only: [:create, :destroy]
     post '/registration/password/recover', to: 'registration#recover_password'
     post '/registration/password/reset', to: 'registration#reset_password'
+    post '/registration/password/recover/key', to: 'registration#get_user_by_reset_key'
 
 end

@@ -8,6 +8,19 @@ class RegistrationController < ApplicationController
 
     skip_before_action :authorize
 
+    def get_user_by_reset_key
+        params = user_params
+        key = params[:key]
+
+        password_reset_key_obj = PasswordResetKey.find_by reset_key: key
+        user = User.find password_reset_key_obj.user_id
+        response = UserResponse.new
+        response.user = UserData.new user
+        response.is_successful = true
+
+        render json: response, status: :ok
+    end
+
     def create
         params = user_params
         response = FlaggedResponse.new
@@ -149,16 +162,12 @@ class RegistrationController < ApplicationController
             log "Old Password Digest: #{old_password_digest}", false
             log "User: #{user.inspect}"
 
-            response.user = UserData.new user
             response.is_successful = true
-
-            response = UserData.new(user)
         else
             response.user = nil
             response.is_successful = false
             response.add_message "Invalid key provided"
             log "Password reset attempted with invalid key '#{key}'"
-            status = :bad_request
         end
 
         { json: response, status: status }

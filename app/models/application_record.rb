@@ -11,6 +11,13 @@ class ApplicationRecord < ActiveRecord::Base
         self.created = Time.now
     end
 
+    def save
+        old_logger = ActiveRecord::Base.logger
+        ActiveRecord::Base.logger = nil
+        super
+        ActiveRecord::Base.logger = old_logger
+    end
+
     def set_last_updated
         self.last_updated = Time.now
         user = UserService.current_user

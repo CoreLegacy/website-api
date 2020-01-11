@@ -5,14 +5,13 @@ include DbUtility
 include UserService
 include LogService
 
-DbUtility::upsert(Role.new(:name => Role::ADMIN))
-DbUtility::upsert(Role.new(:name => Role::STAFF))
-DbUtility::upsert(Role.new(:name => Role::MEMBER))
+Role.constants(false).map(&Role.method(:const_get)).each do |role|
+    DbUtility::upsert(Role.new(:name => role))
+end
 
-DbUtility::upsert(Privilege.new(:name => Privilege::MEDIA))
-DbUtility::upsert(Privilege.new(:name => Privilege::TEXT))
-DbUtility::upsert(Privilege.new(:name => Privilege::EVENTS))
-DbUtility::upsert(Privilege.new(:name => Privilege::BLOG))
+Privilege.constants(false).map(&Privilege.method(:const_get)).each do |privilege|
+    DbUtility::upsert(Privilege.new(:name => privilege))
+end
 
 seed_user = User.new :first_name => "Database", :last_name => "Seeder", :email => "x@y.com", :password => "abc123", :role_id => Role.find_by(name: Role::ADMIN).id, :active => false
 log seed_user.inspect

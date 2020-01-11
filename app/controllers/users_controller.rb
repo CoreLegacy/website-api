@@ -5,7 +5,7 @@ require_relative '../../app/mailers/default_mailer'
 class UsersController < ApplicationController
     include UserService
 
-    skip_before_action :authorize, only: :exists
+    skip_before_action :authorize, only: [:exists]
 
     def index
         params = user_params

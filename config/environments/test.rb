@@ -45,6 +45,8 @@ Rails.application.configure do
     # Custom Settings #
     ###################
 
+    config.FRONTEND_URL = "https://corelegacy.github.io/website-ui-test/"
+
     config.DEFAULT_PORT = 3000
 
     config.serve_static_assets = true

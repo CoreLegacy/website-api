@@ -18,6 +18,16 @@ module LogService
     end
 
     def log_error(context)
+        unless context.is_a? ExceptionContext
+            exception_context = ExceptionContext.new
+            exception_context.exception = context
+            exception_context.message = "Unhandled Exception"
+            exception_context.severity = ExceptionLog::CRITICAL
+
+            log_error exception_context
+            return
+        end
+
         error_log = ExceptionLog.new
         error_log.log_message = context.message
         error_log.exception_message = context.exception.message if context.exception
@@ -39,9 +49,12 @@ module LogService
         error_log.token_payload = context.token_payload
         error_log.severity = context.severity ? context.severity : ExceptionLog::ERROR
 
+        old_logger = ActiveRecord::Base.logger
+        ActiveRecord::Base.logger = nil
+        error_log.save
         error_log.save
 
-        puts "#{$/}Caught Exception: '#{context.exception.to_s}'#{$/}\t#{context.exception.message}#{$/}#{error_log.stacktrace}#{$/}"
+        puts "#{$/}Caught Exception: '#{context.exception.to_s}'#{$/}\t#{error_log.exception_message}#{$/}#{error_log.stacktrace}#{$/}"
     end
 
     def timestamp

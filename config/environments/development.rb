@@ -43,6 +43,8 @@ Rails.application.configure do
     # Custom Settings #
     ###################
 
+    config.FRONTEND_URL = "http://localhost:63342/UI/#!/"
+
     config.DEFAULT_PORT = 8080
 
     config.serve_static_assets = true

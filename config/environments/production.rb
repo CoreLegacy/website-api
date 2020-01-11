@@ -86,7 +86,7 @@ Rails.application.configure do
     # Custom Settings #
     ###################
 
-    config.FRONTEND_URL = "https://corelegacy.org/"
+    config.FRONTEND_URL = "https://corelegacy.org/#!/"
 
     config.DEFAULT_PORT = 3000
 

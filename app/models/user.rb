@@ -9,4 +9,10 @@ class User < ApplicationRecord
     validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
     validates_presence_of :email, :password_digest, :first_name, :role_id
     validates_uniqueness_of :email
+
+    before_save :format_fields
+
+    def format_fields
+        self.email = self.email.downcase if self.email
+    end
 end

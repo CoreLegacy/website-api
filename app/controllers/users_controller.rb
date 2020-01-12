@@ -37,7 +37,7 @@ class UsersController < ApplicationController
         response = FlaggedResponse.new
         response.is_successful = false
         if email
-            response.is_successful = User.exists? email: email
+            response.is_successful = User.exists? email: email.downcase
         end
 
         render json: response

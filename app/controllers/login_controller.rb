@@ -12,13 +12,13 @@ class LoginController < ApplicationController
         email = params[:email]
         password = params[:password]
         with_auth_token = params[:with_auth_token]
-        log params
 
         if !email || !password
             status = :bad_request
             response.is_successful = false
             response.add_message "Must provide a valid email and password"
         elsif UserService::authenticate email, password
+            email = email.downcase
             user = User.find_by(email: email)
             log "User authenticated: #{user.inspect}"
             expiry = Rails.application.config.JWT_EXPIRY.hours.from_now

@@ -12,6 +12,8 @@ class ApplicationController < ActionController::API
     include ActionController::ImplicitRender
     include LogService
 
+    MASKED_PARAMS = %w{password old_password new_password}
+
     before_action :set_user
     before_action :authorize
     before_action :log_request
@@ -68,7 +70,19 @@ class ApplicationController < ActionController::API
     end
 
     def log_request
-        log "#{timestamp}#{$/}Request sent to '#{request.fullpath}':#{$/}\t#{params}"
+        controller_name = params[:controller]
+        controller_params = params[controller_name] ? params[controller_name] : params
+        log_params = {}
+        controller_params.each do |key, value|
+            if MASKED_PARAMS.include? key.to_s.downcase
+                log_params[key] = "[MASKED]"
+            else
+                unless value.is_a?(ActionController::Parameters)
+                    log_params[key] = value
+                end
+            end
+        end
+        log "#{timestamp}#{$/}Request sent to '#{request.fullpath}':#{$/}\t#{log_params}"
     end
 
     def log_response

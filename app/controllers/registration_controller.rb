@@ -94,6 +94,7 @@ class RegistrationController < ApplicationController
             render json: response, status: :bad_request
             return
         end
+        email = email.downcase
         response = RecoverPasswordResponse.new
 
         user = User.find_by email: email
@@ -157,7 +158,6 @@ class RegistrationController < ApplicationController
                 reset_key.save
             end
 
-            log "New Password: #{params[:password]}"
             log "New Password Digest: #{user.password_digest}", false
             log "Old Password Digest: #{old_password_digest}", false
             log "User: #{user.inspect}"
@@ -191,18 +191,18 @@ class RegistrationController < ApplicationController
                 if UserService::authenticate email, old_password
                     user.password = new_password
                     user.save
-
-                    response.user = UserData.new user
+                    response.is_successful = true
                 else
                     response.add_message "Failed to authenticate old password"
+                    response.is_successful = false
                 end
 
             else
                 response.add_message "User with email address '#{email}' does not exist"
-                status = :bad_request
+                response.is_successful = false
             end
         else
-            status = :bad_request
+            response.is_successful = false
         end
 
         { json: response, status: status }
